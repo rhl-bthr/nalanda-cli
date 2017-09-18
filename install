@@ -1,0 +1,5 @@
+sudo pip install requests
+sudo pip install bs4
+cd "${0%/*}"
+cd "src/res"
+python installation.py
