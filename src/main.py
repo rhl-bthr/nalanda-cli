@@ -1,6 +1,6 @@
 #Rahul Bothra
 #Pro-Panda
-#Auto-Nalanda
+#Termi-Nal-anda
 
 import requests
 import folders, subject_update, slides, notices, news
@@ -21,7 +21,6 @@ if(path[-1]!='/'):
     path=path+'/'
 
 sub_list,sub_names = subject_update.update(session) #Updating user's subject list and urls
-
 folders.subject_make(sub_names,path) #Making folders for lecture slides
 
 for subj in sub_list: #getting all links in each subject page

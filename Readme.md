@@ -9,11 +9,14 @@ Download the repository. Then, in a terminal window, run: <br>
 ```shell
 ./install 
 ```
+[![Installation](src/res/info.png)]
 while installing for the first time. And
 ```shell
 ./run
 ```
+[![Demonstration](src/res/info2.png)]
 Each time you want to see if there are any new notices or announcements, or you want to download the new lecture slides
 <br>
 #### License:
 GNU GPL
+

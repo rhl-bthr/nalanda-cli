@@ -1,5 +1,7 @@
-sudo pip install requests
-sudo pip install bs4
-cd "${0%/*}"
+sudo echo "Installing Modules. Please wait.."
+sudo -H pip install requests > /dev/null
+sudo -H pip install bs4 > /dev/null
+echo "Installed!"
+cd "${0%/*}" 
 cd "src/res"
 python installation.py
