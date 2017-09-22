@@ -5,16 +5,16 @@ It uses **bs4** and **requests** Libraries. It scrapes Nalanda - The E-Learning 
 Ubuntu, Python2.7 and pip installed
 <br>
 #### Usage:
-Download the repository. Then, in a terminal window, run: <br>
+Download the repository. Open a terminal and type(only for the first time): <br>
 ```shell
 ./install 
 ```
-[![Installation](src/res/info.png)]
-while installing for the first time. And
+![Installation](src/res/info.png)
+Now whenever you want to start termiNalanda, type:
 ```shell
 termi-nalanda
 ```
-[![Demonstration](src/res/info2.png)]
+![Demonstration](src/res/info2.png)
 Each time you want to see if there are any new notices or announcements, or you want to download the new lecture slides
 <br>
 #### License:
