@@ -2,6 +2,10 @@ sudo echo "Installing Modules. Please wait.."
 sudo -H pip install requests > /dev/null
 sudo -H pip install bs4 > /dev/null
 echo "Installed!"
-cd "${0%/*}" 
-cd "src/res"
+mv -T "${0%/*}/src" ~/.termi-nalanda
+rm -rf ${0%/*}
+cd ~/.termi-nalanda/res
+#Doing a cd is really necessary
 python installation.py
+cd ..
+sudo mv termi-nalanda /usr/bin/
