@@ -10,5 +10,6 @@ rm -rf ${0%/*}
 cd ~/.termi-nalanda/res
 #cd'ing is necessary
 python installation.py
+rm info.png info2.png installation.py
 cd ..
 sudo mv -f termi-nalanda /usr/bin/
