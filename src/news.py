@@ -8,6 +8,7 @@ def display(session,sub_names,news_urls):
         read_news = subj_file_news.readlines()
         subject_news=[]
         subject_news_url = []
+        
         for y in range(len(news_urls[x])):
             result = session.get(news_urls[x][y])
             soup = BeautifulSoup(result.text,"html.parser")
@@ -20,17 +21,15 @@ def display(session,sub_names,news_urls):
                     subject_news.append(url.contents[0].contents[0].contents[0])
                     subject_news_url.append(url.contents[0].contents[0].get('href'))
 
-        diff = len(subject_news)-len(read_news)
-        if(diff):
-            for y in range(len(subject_news)):
-                if (subject_news[y]+'\n' not in read_news):
-                    if news_flag==1:
-                        s_no+=1
-                        print '\n'+'\033[1m' + str(s_no) + '. ' + sub_names[x] + '\033[0m'
-                    print '\t'+str(news_flag) + '. '+ subject_news[y] + '\n\t\t' + subject_news_url[y]
-                    news_flag+=1
-                    subj_file_news.write(subject_news[y]+'\n')
-            if(news_flag!=1):
-                print ""
+        for y in range(len(subject_news)):
+            if (subject_news[y]+'\n' not in read_news):
+                if news_flag==1:
+                    s_no+=1
+                    print '\n'+'\033[1m' + str(s_no) + '. ' + sub_names[x] + '\033[0m'
+                print '\t'+str(news_flag) + '. '+ subject_news[y] + '\n\t\t' + subject_news_url[y]
+                news_flag+=1
+                subj_file_news.write(subject_news[y]+'\n')
+        if(news_flag!=1):
+            print ""
     if(s_no)==0:
         print "\t*No New news*"
