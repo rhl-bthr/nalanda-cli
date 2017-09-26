@@ -21,4 +21,4 @@ def update(session,sub_names,resource_urls,path):
     if s_no==0:
         print "\t*No new slides*"
     else:
-        print "\t*All subjects updated!*"
+        print "\t*All new updates downloaded!*"

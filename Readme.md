@@ -9,12 +9,12 @@ Download the repository. Open a terminal and type(only for the first time): <br>
 ```shell
 ./install 
 ```
-![Installation](src/res/info.png)
+![Installation](src/res/info.png)<br>
 Now whenever you want to start termiNalanda, type:
 ```shell
 termi-nalanda
 ```
-![Demonstration](src/res/info2.png)
+![Demonstration](src/res/info2.png)<br>
 Each time you want to see if there are any new notices or announcements, or you want to download the new lecture slides
 <br>
 #### License:
