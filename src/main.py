@@ -1,6 +1,6 @@
 #Rahul Bothra
 #Pro-Panda
-#Termi-Nal-anda
+#Termi-Nalanda
 
 import requests
 import folders, subject_update, slides, notices, news
