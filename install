@@ -1,15 +1,5 @@
-sudo echo "Installing Modules. Please wait.."
-sudo apt-get install python-pip python-dev build-essential > /dev/null
-sudo -H pip install requests > /dev/null
-sudo -H pip install bs4 > /dev/null
-echo "Installed!"
-
-rm -rf ~/.termi-nalanda
-mv -T "${0%/*}/src" ~/.termi-nalanda
-rm -rf ${0%/*}
-cd ~/.termi-nalanda/res
-#cd'ing is necessary
-python installation.py
-rm info.png info2.png installation.py
-cd ..
-sudo mv -f termi-nalanda /usr/bin/
+#! /bin/bash
+sudo pip install -r requirements.txt
+cp -rfT "${0%/*}/src" ~/.termi-nalanda
+python ~/.termi-nalanda/installation.py
+sudo cp -f ~/.termi-nalanda/nalanda /usr/bin/
