@@ -61,11 +61,13 @@ def find_new(session, sub_names, urls_title, update_type):
                 update_type,
                 sub_names[x]),
             'a+r')
-        subject_read = subject_file.readlines()
-        subject_read = [notice.strip('\n')[0] for notice in subject_read]
-        for y in range(len(new_urls_title[x])):
-            if (new_urls_title[x][y][1] in subject_read):
-                del(new_urls_title[x][y])
+        subject_read = (subject_file.read()).split('\n')
+        for y in range(len(urls_title[x])):
+            if (urls_title[x][y][1] in subject_read):
+                pass
+            else:
+                new_urls_title[x].append(urls_title[x][y])
+                subject_file.write("\n"+new_urls_title[x][y][1]+'\n')
     return new_urls_title
 
 
