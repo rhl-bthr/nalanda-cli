@@ -27,25 +27,25 @@ def terminal_display(
         sub_names=[],
         message=None,
         message_subject=[]):
-    print '\033[1m' + update_type + '-\n\033[0m'
+    print '\033[1m' + update_type + ':\033[0m'
     if (urls_title is not None):
         check_for_no_update = sum([len(x) for x in urls_title])
         if(check_for_no_update == 0):
-            print "No New " + update_type
+            print "No new " + update_type
             return 0
         for x in range(len(sub_names)):
             for y in range(len(urls_title[x])):
                 if(y == 0):
-                    print "\t" + sub_names[x]
-                print str(y + 1) + '. ' + str(urls_title[x][y][1])
-                print "\t" + urls_title[x][y][0]
+                    print '\n\033[1m' + sub_names[x] + '-\033[0m'
+                print '\t\033[1m'+str(y + 1) + '\033[0m. ' + str(urls_title[x][y][1])
+                print "\t\t" + urls_title[x][y][0]
     else:
         if (sum(message_subject) == 0):
-            print "No New " + update_type
+            print "No new " + update_type
             return 0
         for x in range(len(message_subject)):
             if(message_subject[x] == 1):
-                print sub_names[x] + message
+                print '\033[1m' + sub_names[x] + '\033[0m' + message
     print ('-' * 60 + '\n')
 
 
