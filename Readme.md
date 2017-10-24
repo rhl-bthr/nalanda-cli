@@ -1,21 +1,47 @@
 ## Termi-Nalanda
-#### About:
-It uses **bs4** and **requests** Libraries. It scrapes Nalanda - The E-Learning Management System for BITS Pilani.<br>It is used to access nalanda using the terminal. It can show you notices, news and announcements which you **haven't seen earlier** using Termi-Nalanda.<br>It will also **download/update all** the lecture slides and other resources for you.<br>
-#### Requirements:
-Ubuntu, Python2.7 and pip installed
+### About:
+It uses **bs4** and **requests** Libraries. It is used to access Nalanda - The E-Learning Management System for BITS Pilani, directly from the terminal<br>. It displays notices which you **haven't seen earlier** using this.<br>It will also **download/update** the lecture slides and other resources for you.<br>
+
+### Requirements:
+ - Ubuntu
+ - Python2.7 or higher
+ - pip
 <br>
-#### Usage:
-Download the repository. Open it in a terminal and type: <br>
+
+### Installation:
+Clone the repository. Open it in a terminal and type: <br>
 ```shell
 ./install 
 ```
-![Installation](src/res/install.png)<br>
-Whenever, you want to see the Nalanda Updates or just download the slides, type:
+#### Inputs:
+1. Enter your BITS ID -<br>
+Eg: if your ID is 2016A7PS0015P, type in<br>
 ```shell
-termi-nalanda
+f2016015
 ```
+2. Enter your nalanda password.
+3. Enter the path to store lecture slides -<br>
+Eg: If you want to store lecture slides at
+```shell
+/home/username/Bits/2-1/
+```
+then type,
+```shell
+Bits/2-1
+```
+<br>
+### Usage:
+Whenever, you want to see the Nalanda Updates or just download the slides, open a terminal and type:
+```shell
+nalanda
+```
+
+### Screenshots:
+1. Installation
+![Installation](src/res/install.jpg)<br>
+2. Using termi-nalanda
 ![Demonstration](src/res/running.jpg)<br>
 <br>
-#### License:
-GNU GPL
 
+### License:
+GPL
