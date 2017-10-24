@@ -67,7 +67,7 @@ def find_new(session, sub_names, urls_title, update_type):
                 pass
             else:
                 new_urls_title[x].append(urls_title[x][y])
-                subject_file.write("\n"+new_urls_title[x][y][1])
+                subject_file.write("\n"+urls_title[x][y][1])
     return new_urls_title
 
 
