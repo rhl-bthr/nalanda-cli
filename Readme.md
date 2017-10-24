@@ -29,7 +29,6 @@ then type,
 ```shell
 Bits/2-1
 ```
-<br>
 ### Usage:
 Whenever, you want to see the Nalanda Updates or just download the slides, open a terminal and type:
 ```shell
@@ -40,7 +39,7 @@ nalanda
 1. Installation
 ![Installation](src/res/install.jpg)<br>
 2. Using termi-nalanda
-![Demonstration](src/res/running.jpg)<br>
+![Demonstration](src/res/demo.jpg)<br>
 <br>
 
 ### License:
