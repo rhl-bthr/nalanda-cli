@@ -3,6 +3,8 @@ import copy
 from bs4 import BeautifulSoup
 import terminal
 
+def bold(text):
+    return '\033[1m' + text + '\033[0m'
 
 def get_news(session, sub_names, news_urls):
     subject_news_url = [[] for x in range(len(sub_names))]
@@ -27,7 +29,7 @@ def terminal_display(
         sub_names=[],
         message=None,
         message_subject=[]):
-    print '\033[1m' + update_type + ':\033[0m'
+    print bold(update_type+':')
     if (urls_title is not None):
         check_for_no_update = sum([len(x) for x in urls_title])
         if(check_for_no_update == 0):
@@ -36,16 +38,17 @@ def terminal_display(
         for x in range(len(sub_names)):
             for y in range(len(urls_title[x])):
                 if(y == 0):
-                    print '\n\033[1m' + sub_names[x] + '-\033[0m'
-                print '\t\033[1m'+str(y + 1) + '\033[0m. ' + str(urls_title[x][y][1])
+                    print '\n'
+                    print bold(sub_names[x] + '-')
+                print '\t' + bold(str(y + 1))+'. ' + str(urls_title[x][y][1])
                 print "\t\t" + urls_title[x][y][0]
     else:
         if (sum(message_subject) == 0):
             print "No new " + update_type
             return 0
-        for x in range(len(message_subject)):
-            if(message_subject[x] == 1):
-                print '\033[1m' + sub_names[x] + '\033[0m' + message
+        for x in range(len(sub_names)):
+            if(message_subject[x] != 0):
+                print bold(sub_names[x]) + message
     print ('-' * 60 + '\n')
 
 

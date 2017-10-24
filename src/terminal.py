@@ -72,14 +72,14 @@ def sorting_links(subject_links):
                     [url, subject_links[x][y].contents[1].contents[0]])
             elif('forum/view.php?id' in url):
                 news_urls[x].append(url)
-            elif('/mod/' in url and 'id' in url and 'index' not in url):
-                notice_urls[x].append([url, subject_links[x][y].contents])
+            # elif('/mod/' in url and 'id' in url and 'index' not in url):
+            #     notice_urls[x].append([url, subject_links[x][y].contents])
     return notice_urls, news_urls, resource_urls
 
 
 def main():
     """Displaying notices, news and other announcements, updating slides"""
-    print '\033[1m' + "\t\t**Nalanda**" + '\033[0m'
+    print "\t\t" + notices.bold("**Nalanda**")
     slides_path, session = login()
     subject_names, subject_urls = subject_list_folders(slides_path)
     subject_links = get_all_links(subject_urls, session)
