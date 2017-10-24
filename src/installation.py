@@ -35,12 +35,13 @@ def get_subject_list(session):
     name_file = open(name_file_name, 'w')
     result = session.get('http://nalanda.bits-pilani.ac.in/my')
     soup = BeautifulSoup(result.text, "html.parser")
+    subject_url = []
+    subject_name = []
     for x in soup.find_all('div', 'column c1'):
-        subject_url = x.contents[0].get('href')
-        subject_name = (
-            (x.contents[0].contents[1]).split('/')[0]).split('\\')[0]
-        url_file.write(subject_url + '\n')
-        name_file.write(subject_name + '\n')
+        subject_url.append(x.contents[0].get('href'))
+        subject_name.append(((x.contents[0].contents[1]).split('/')[0]).split('\\')[0])
+    url_file.write('\n'.join(subject_url))
+    name_file.write('\n'.join(subject_name))
 
 
 def main():

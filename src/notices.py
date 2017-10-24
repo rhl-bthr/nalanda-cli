@@ -33,7 +33,7 @@ def terminal_display(
     if (urls_title is not None):
         check_for_no_update = sum([len(x) for x in urls_title])
         if(check_for_no_update == 0):
-            print "No new " + update_type
+            print "\tNo new " + update_type
             return 0
         for x in range(len(sub_names)):
             for y in range(len(urls_title[x])):
@@ -44,7 +44,7 @@ def terminal_display(
                 print "\t\t" + urls_title[x][y][0]
     else:
         if (sum(message_subject) == 0):
-            print "No new " + update_type
+            print "\tNo new " + update_type
             return 0
         for x in range(len(sub_names)):
             if(message_subject[x] != 0):
@@ -53,7 +53,7 @@ def terminal_display(
 
 
 def find_new(session, sub_names, urls_title, update_type):
-    new_urls_title = copy.copy(urls_title)
+    new_urls_title = [[]for x in range(len(sub_names))]
     for x in range(len(sub_names)):
         subject_file = open(
             os.path.join(
