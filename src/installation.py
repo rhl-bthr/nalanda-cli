@@ -1,9 +1,11 @@
 import os
 import requests
 from bs4 import BeautifulSoup
-from terminal import login, INSTALLATION_FOLDER
+from terminal import login
 
-FOLDER_LIST = ['News', 'Notices', 'Downloaded', 'Subjects']
+INSTALLATION_FOLDER = os.path.join(os.path.expanduser('~'), '.termi-nalanda')
+
+FOLDER_LIST = ['News', 'Notices', 'Lectures', 'Subjects']
 
 
 def take_config():
