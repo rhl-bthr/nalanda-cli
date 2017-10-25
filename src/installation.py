@@ -9,12 +9,9 @@ FOLDER_LIST = ['News', 'Notices', 'Lectures', 'Subjects']
 
 
 def take_config():
-    print "\nEnter your BITS ID [Eg: f2016015]"
-    email = raw_input() + '@pilani.bits-pilani.ac.in'
-    print "Enter your Nalanda Password"
-    pwd = raw_input()
-    print "Enter the path to store the lecture slides [Refer to readme]"
-    path = raw_input()
+    email = input("\nEnter your BITS ID [Eg: f2016015]") + '@pilani.bits-pilani.ac.in'
+    pwd = input("Enter your Nalanda Password")
+    path = input("Enter the path to store the lecture slides [Refer to readme]")
     config_path = os.path.join(INSTALLATION_FOLDER, 'config.txt')
     path = os.path.join(os.path.expanduser('~'), path)
     f = open(config_path, 'w')

@@ -1,7 +1,9 @@
 import os
-import copy
 from bs4 import BeautifulSoup
+from __future__ import print_function
+
 import terminal
+
 
 def bold(text):
     return '\033[1m' + text + '\033[0m'

@@ -3,7 +3,7 @@
 # Termi-Nalanda
 
 import os
-import copy
+from __future__ import print_function
 import requests
 import subject_update
 import slides
@@ -77,7 +77,7 @@ def sorting_links(subject_links):
 
 def main():
     """Displaying notices, news and other announcements, updating slides"""
-    print "\t\t" + notices.bold("**Nalanda**")
+    print ("\t\t" + notices.bold("**Nalanda**"))
     slides_path, session = login()
     subject_names, subject_urls = subject_list_folders(slides_path)
     subject_links = get_all_links(subject_urls, session)
