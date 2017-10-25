@@ -34,18 +34,15 @@ def terminal_display(
         check_for_no_update = sum([len(x) for x in urls_title])
         if(check_for_no_update == 0):
             print "\tNo new " + update_type
-            return 0
         for x in range(len(sub_names)):
             for y in range(len(urls_title[x])):
                 if(y == 0):
-                    print '\n'
-                    print bold(sub_names[x] + '-')
+                    print bold('\n'+sub_names[x] + '-')
                 print '\t' + bold(str(y + 1))+'. ' + str(urls_title[x][y][1])
                 print "\t\t" + urls_title[x][y][0]
     else:
         if (sum(message_subject) == 0):
             print "\tNo new " + update_type
-            return 0
         for x in range(len(sub_names)):
             if(message_subject[x] != 0):
                 print bold(sub_names[x]) + message
