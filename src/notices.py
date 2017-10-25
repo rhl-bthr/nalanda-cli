@@ -32,23 +32,23 @@ def terminal_display(
         sub_names=[],
         message=None,
         message_subject=[]):
-    print bold(update_type+':')
+    print (bold(update_type+':'))
     if (urls_title is not None):
         check_for_no_update = sum([len(x) for x in urls_title])
         if(check_for_no_update == 0):
-            print "\tNo new " + update_type
+            print ("\tNo new " + update_type)
         for x in range(len(sub_names)):
             for y in range(len(urls_title[x])):
                 if(y == 0):
-                    print bold('\n'+sub_names[x] + '-')
-                print '\t' + bold(str(y + 1))+'. ' + str(urls_title[x][y][1])
-                print "\t\t" + urls_title[x][y][0]
+                    print (bold('\n'+sub_names[x] + '-'))
+                print ('\t' + bold(str(y + 1))+'. ' + urls_title[x][y][1])
+                print ("\t\t" + urls_title[x][y][0])
     else:
         if (sum(message_subject) == 0):
-            print "\tNo new " + update_type
+            print ("\tNo new " + update_type)
         for x in range(len(sub_names)):
             if(message_subject[x] != 0):
-                print bold(sub_names[x]) + message
+                print (bold(sub_names[x]) + message)
     print ('-' * 60 + '\n')
 
 

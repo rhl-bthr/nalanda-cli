@@ -8,11 +8,15 @@ INSTALLATION_FOLDER = os.path.join(os.path.expanduser('~'), '.termi-nalanda')
 
 FOLDER_LIST = ['News', 'Notices', 'Lectures', 'Subjects']
 
+try:
+   input = raw_input
+except NameError:
+   pass
 
 def take_config():
-    email = input("\nEnter your BITS ID [Eg: f2016015]") + '@pilani.bits-pilani.ac.in'
-    pwd = input("Enter your Nalanda Password")
-    path = input("Enter the path to store the lecture slides [Refer to readme]")
+    email = input("\nEnter your BITS ID [Eg: f2016015]\n") + '@pilani.bits-pilani.ac.in'
+    pwd = input("Enter your Nalanda Password\n")
+    path = input("Enter the path to store the lecture slides [Refer to readme]\n")
     config_path = os.path.join(INSTALLATION_FOLDER, 'config.txt')
     path = os.path.join(os.path.expanduser('~'), path)
     f = io.open(config_path, 'w')
