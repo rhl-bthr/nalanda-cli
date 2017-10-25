@@ -4,7 +4,7 @@ It uses **bs4** and **requests** Libraries. It is used to access Nalanda - The E
 
 ### Requirements:
  - Ubuntu
- - Python2.7 or higher
+ - Python2.7
  - pip
 <br>
 
@@ -40,7 +40,3 @@ nalanda
 ![Installation](src/res/install.jpg)<br>
 2. Using termi-nalanda
 ![Demonstration](src/res/demo.jpg)<br>
-<br>
-
-### License:
-GPL
