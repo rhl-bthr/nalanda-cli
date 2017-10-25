@@ -1,6 +1,7 @@
 import os
 import requests
 from bs4 import BeautifulSoup
+import io
 from terminal import login
 
 INSTALLATION_FOLDER = os.path.join(os.path.expanduser('~'), '.termi-nalanda')
@@ -14,9 +15,9 @@ def take_config():
     path = input("Enter the path to store the lecture slides [Refer to readme]")
     config_path = os.path.join(INSTALLATION_FOLDER, 'config.txt')
     path = os.path.join(os.path.expanduser('~'), path)
-    f = open(config_path, 'w')
-    config = email + '\n' + pwd + '\n' + path
-    f.write(config)
+    f = io.open(config_path, 'w')
+    config = (email + '\n' + pwd + '\n' + path)
+    f.write(unicode(config))
     f.close()
 
 
@@ -28,8 +29,8 @@ def make_folders():
 def get_subject_list(session):
     url_file_name = os.path.join(INSTALLATION_FOLDER, 'Subjects', 'url.txt')
     name_file_name = os.path.join(INSTALLATION_FOLDER, 'Subjects', 'name.txt')
-    url_file = open(url_file_name, 'w')
-    name_file = open(name_file_name, 'w')
+    url_file = io.open(url_file_name, 'w')
+    name_file = io.open(name_file_name, 'w')
     result = session.get('http://nalanda.bits-pilani.ac.in/my')
     soup = BeautifulSoup(result.text, "html.parser")
     subject_url = []

@@ -1,6 +1,7 @@
+from __future__ import print_function
 import os
 from bs4 import BeautifulSoup
-from __future__ import print_function
+import io
 
 import terminal
 
@@ -54,12 +55,13 @@ def terminal_display(
 def find_new(session, sub_names, urls_title, update_type):
     new_urls_title = [[]for x in range(len(sub_names))]
     for x in range(len(sub_names)):
-        subject_file = open(
+        subject_file = io.open(
             os.path.join(
                 terminal.INSTALLATION_FOLDER,
                 update_type,
                 sub_names[x]),
-            'a+r')
+            'a+')
+        subject_file.seek(0)
         subject_read = (subject_file.read()).split('\n')
         for y in range(len(urls_title[x])):
             if (urls_title[x][y][1] in subject_read):

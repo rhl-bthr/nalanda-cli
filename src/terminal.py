@@ -2,21 +2,19 @@
 # Pro-Panda
 # Termi-Nalanda
 
-import os
 from __future__ import print_function
+import os
 import requests
-import subject_update
 import slides
 import notices
-import news
 from bs4 import BeautifulSoup
+import io
 
 INSTALLATION_FOLDER = os.path.join(os.path.expanduser('~'), '.termi-nalanda')
 
-
 def login():
     session = requests.session()
-    config = open(os.path.join(INSTALLATION_FOLDER, 'config.txt'), 'r')
+    config = io.open(os.path.join(INSTALLATION_FOLDER, 'config.txt'), 'r')
     config = (config.read()).split('\n')
     session.post('http://nalanda.bits-pilani.ac.in/login/index.php', data={
         'username': config[0],
@@ -28,13 +26,13 @@ def login():
 
 
 def subject_list_folders(slides_path):
-    name_file = open(
+    name_file = io.open(
         os.path.join(
             INSTALLATION_FOLDER,
             'Subjects/name.txt'),
         'r')
     subject_list = (name_file.read()).split('\n')
-    url_file = open(os.path.join(INSTALLATION_FOLDER, 'Subjects/url.txt'), 'r')
+    url_file = io.open(os.path.join(INSTALLATION_FOLDER, 'Subjects/url.txt'), 'r')
     url_list = (url_file.read()).split('\n')
     for subject in subject_list:
         subject_path = os.path.join(slides_path, subject)
