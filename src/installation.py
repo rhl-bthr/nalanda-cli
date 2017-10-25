@@ -9,9 +9,9 @@ INSTALLATION_FOLDER = os.path.join(os.path.expanduser('~'), '.termi-nalanda')
 FOLDER_LIST = ['News', 'Notices', 'Lectures', 'Subjects']
 
 try:
-   input = raw_input
+    input = raw_input
 except NameError:
-   pass
+    pass
 
 def take_config():
     email = input("\nEnter your BITS ID [Eg: f2016015]\n") + '@pilani.bits-pilani.ac.in'
@@ -21,7 +21,11 @@ def take_config():
     path = os.path.join(os.path.expanduser('~'), path)
     f = io.open(config_path, 'w')
     config = (email + '\n' + pwd + '\n' + path)
-    f.write(unicode(config))
+    try:
+        f.write(config)
+    except TypeError:
+        f.write(unicode(config))
+
     f.close()
 
 
