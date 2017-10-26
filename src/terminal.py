@@ -13,7 +13,10 @@ INSTALLATION_FOLDER = os.path.join(os.path.expanduser('~'), '.termi-nalanda')
 
 def login():
     session = requests.session()
-    config = io.open(os.path.join(INSTALLATION_FOLDER, 'config.txt'), 'r')
+    try:
+        config = io.open(os.path.join(INSTALLATION_FOLDER, 'config.txt'), 'r')
+    except IOError:
+        quit("Unable to read from file. Please reinstall termi-Nalanda")
     config = (config.read()).split('\n')
     session.post('http://nalanda.bits-pilani.ac.in/login/index.php', data={
         'username': config[0],
@@ -22,17 +25,18 @@ def login():
     return config[2], session
 
 # Updating Subject List and making folders
-
-
 def subject_list_folders(slides_path):
-    name_file = io.open(
+    try:
+        name_file = io.open(
         os.path.join(
             INSTALLATION_FOLDER,
-            'Subjects/name.txt'),
+            'Subjects','name.txt'),
         'r')
-    subject_list = (name_file.read()).split('\n')
-    url_file = io.open(os.path.join(INSTALLATION_FOLDER, 'Subjects/url.txt'), 'r')
+        url_file = io.open(os.path.join(INSTALLATION_FOLDER, 'Subjects','url.txt'), 'r')
+    except IOError:
+        quit("Unable to read from file. Please reinstall termi-Nalanda")
     url_list = (url_file.read()).split('\n')
+    subject_list = (name_file.read()).split('\n')
     for subject in subject_list:
         subject_path = os.path.join(slides_path, subject)
         if not os.path.exists(subject_path):

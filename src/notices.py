@@ -3,15 +3,14 @@ import os, io
 from bs4 import BeautifulSoup
 import terminal
 
-
-def bold(text):
-    return '\033[1m' + text + '\033[0m'
-
 def get_news(session, sub_names, news_urls):
     subject_news_url = [[] for x in range(len(sub_names))]
     for x in range(len(sub_names)):
         for y in range(len(news_urls[x])):
-            result = session.get(news_urls[x][y])
+            try:
+                result = session.get(news_urls[x][y])
+            except session.exceptions.ConnectionError:
+                quit("No Internet Connection. Please retry")
             soup = BeautifulSoup(result.text, "html.parser")
             discussion_list = soup.find_all('tr', 'discussion')
             for url in discussion_list:
@@ -53,12 +52,15 @@ def terminal_display(
 def find_new(session, sub_names, urls_title, update_type):
     new_urls_title = [[]for x in range(len(sub_names))]
     for x in range(len(sub_names)):
-        subject_file = io.open(
-            os.path.join(
-                terminal.INSTALLATION_FOLDER,
-                update_type,
-                sub_names[x]),
-            'a+')
+        try:
+            subject_file = io.open(
+                os.path.join(
+                    terminal.INSTALLATION_FOLDER,
+                    update_type,
+                    sub_names[x]),
+                'a+')
+        except IOError:
+            quit("Unable to read from file. Please reinstall termi-Nalanda")
         subject_file.seek(0)
         subject_read = (subject_file.read()).split('\n')
         for y in range(len(urls_title[x])):

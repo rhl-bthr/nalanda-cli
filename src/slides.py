@@ -12,8 +12,11 @@ def download(session, sub_names, resource_urls, path):
             if (resource_urls[x][y] not in done_slides):
                 if ('folder/view' in resource_urls[x][y]):
                     id_param = resource_urls[x][y].split('php')[1]
-                    result = session.get(
+                    try:
+                        result = session.get(
                         'http://nalanda.bits-pilani.ac.in/mod/folder/download_folder.php' + id_param)
+                    except session.exceptions.ConnectionError:
+                        quit("No Internet Connection. Please retry")
                 else:
                     result = session.get(resource_urls[x][y])
                 file_name = result.headers['content-disposition'].split('e="')[

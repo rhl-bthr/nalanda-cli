@@ -34,9 +34,15 @@ def make_folders():
 def get_subject_list(session):
     url_file_name = os.path.join(INSTALLATION_FOLDER, 'Subjects', 'url.txt')
     name_file_name = os.path.join(INSTALLATION_FOLDER, 'Subjects', 'name.txt')
-    url_file = io.open(url_file_name, 'w')
-    name_file = io.open(name_file_name, 'w')
-    result = session.get('http://nalanda.bits-pilani.ac.in/my')
+    try:
+        url_file = io.open(url_file_name, 'w')
+        name_file = io.open(name_file_name, 'w')
+        result = session.get('http://nalanda.bits-pilani.ac.in/my')
+    except IOError:
+        quit("Unable to read from file. Please reinstall termi-Nalanda")
+    except requests.exceptions.ConnectionError:
+        quit("No Internet Connection. Please retry")
+
     soup = BeautifulSoup(result.text, "html.parser")
     subject_url, subject_name = [],[]
     for x in soup.find_all('div', 'column c1'):
