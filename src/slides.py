@@ -1,6 +1,5 @@
-from notices import terminal_display
-import io
-import os
+from terminal import terminal_display
+import io, os
 
 INSTALLATION_FOLDER = os.path.join(os.path.expanduser('~'), '.termi-nalanda')
 def download(session, sub_names, resource_urls, path):
@@ -24,8 +23,6 @@ def download(session, sub_names, resource_urls, path):
                 done_slides_file.write(resource_urls[x][y]+'\n')
                 subject_updates[x]+=1
     return subject_updates
-
-
 
 def main(session, sub_names, resource_urls, path):
     subject_updates = download(session, sub_names, resource_urls, path)

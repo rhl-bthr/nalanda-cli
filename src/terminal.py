@@ -3,12 +3,11 @@
 # Termi-Nalanda
 
 from __future__ import print_function
-import os
+import os, io
 import requests
 import slides
 import notices
 from bs4 import BeautifulSoup
-import io
 
 INSTALLATION_FOLDER = os.path.join(os.path.expanduser('~'), '.termi-nalanda')
 
@@ -41,8 +40,6 @@ def subject_list_folders(slides_path):
     return subject_list, url_list
 
 # Getting all relevant links in each subject page
-
-
 def get_all_links(subject_urls, session):
     subject_links = []
     for subj in subject_urls:
@@ -52,8 +49,6 @@ def get_all_links(subject_urls, session):
     return subject_links
 
 # Sorting Urls
-
-
 def sorting_links(subject_links):
     resource_urls = [[] for x in range(len(subject_links))]
     news_urls = [[] for x in range(len(subject_links))]
@@ -82,7 +77,6 @@ def main():
     notice_urls, news_urls, resource_urls = sorting_links(subject_links)
     notices.main(session, subject_names, notice_urls, news_urls)
     slides.main(session, subject_names, resource_urls, slides_path)
-
 
 if(__name__ == '__main__'):
     main()

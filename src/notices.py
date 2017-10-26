@@ -1,8 +1,6 @@
 from __future__ import print_function
-import os
+import os, io
 from bs4 import BeautifulSoup
-import io
-
 import terminal
 
 
