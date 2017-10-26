@@ -63,7 +63,7 @@ def sorting_links(subject_links):
         for y in range(len(subject_links[x])):
             url = (subject_links[x][y]).get('href')
             if('resource/view.php?id' in url or 'folder/view.php?id=' in url):
-                resource_urls[x].append(url)
+                res_urls[x].append(url)
             elif('page/view.php?id' in url):
                 notice_urls[x].append(
                     [url, subject_links[x][y].contents[1].contents[0]])
@@ -71,7 +71,7 @@ def sorting_links(subject_links):
                 news_urls[x].append(url)
             # elif('/mod/' in url and 'id' in url and 'index' not in url):
             #     notice_urls[x].append([url, subject_links[x][y].contents])
-    return notice_urls, news_urls, resource_urls
+    return notice_urls, news_urls, res_urls
 
 def terminal_display(
         urls_title=None,
@@ -104,9 +104,9 @@ def main():
     slides_path, session = login()
     subject_names, subject_urls = subject_list_folders(slides_path)
     subject_links = get_all_links(subject_urls, session)
-    notice_urls, news_urls, resource_urls = sorting_links(subject_links)
+    notice_urls, news_urls, res_urls = sorting_links(subject_links)
     notices.main(session, subject_names, notice_urls, news_urls)
-    slides.main(session, subject_names, resource_urls, slides_path)
+    slides.main(session, subject_names, res_urls, slides_path)
 
 if(__name__ == '__main__'):
     main()
