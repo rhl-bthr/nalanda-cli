@@ -1,8 +1,8 @@
-import io, os
+import io, os, requests
 
 INSTALLATION_FOLDER = os.path.join(os.path.expanduser('~'), '.termi-nalanda')
 def download(session, sub_names, res_urls, path):
-    subject_updates = [0 for x in res_urls]
+    subject_updates = [[] for x in sub_names]
     for x in range(len(sub_names)):
         done_slides_file = io.open(os.path.join(INSTALLATION_FOLDER,"Lectures",sub_names[x]+'.txt'),'a+')
         done_slides_file.seek(0)
@@ -14,7 +14,7 @@ def download(session, sub_names, res_urls, path):
                     try:
                         result = session.get(
                         'http://nalanda.bits-pilani.ac.in/mod/folder/download_folder.php' + id_param)
-                    except session.exceptions.ConnectionError:
+                    except requests.exceptions.ConnectionError:
                         quit("No Internet Connection. Please retry")
                 else:
                     result = session.get(res_urls[x][y])
@@ -23,10 +23,10 @@ def download(session, sub_names, res_urls, path):
                 with io.open(os.path.join(path, sub_names[x], file_name), 'wb') as f:
                     f.write(result.content)
                 done_slides_file.write(res_urls[x][y]+'\n')
-                subject_updates[x]+=1
+                subject_updates[x].append([])
     return subject_updates
 
 def main(session, sub_names, res_urls, path):
     from terminal import terminal_display
-    subject_updates = download(session, sub_names, res_urls, path)
-    terminal_display(None, 'Lectures', sub_names, " has new updates", subject_updates)
+    update_list = download(session, sub_names, res_urls, path)
+    terminal_display(update_list, 'Lectures', sub_names, " has new updates")
