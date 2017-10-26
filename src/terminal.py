@@ -56,9 +56,7 @@ def get_all_links(subject_urls, session):
 
 # Sorting Urls
 def sorting_links(subject_links):
-    resource_urls = [[] for x in range(len(subject_links))]
-    news_urls = [[] for x in range(len(subject_links))]
-    notice_urls = [[] for x in range(len(subject_links))]
+    res_urls, news_urls, notice_urls = ([[] for x in range(len(subject_links))] for y in range(3))
     for x in range(len(subject_links)):
         for y in range(len(subject_links[x])):
             url = (subject_links[x][y]).get('href')
