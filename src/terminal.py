@@ -10,6 +10,8 @@ import notices
 from bs4 import BeautifulSoup
 
 INSTALLATION_FOLDER = os.path.join(os.path.expanduser('~'), '.termi-nalanda')
+def bold(text):
+    return '\033[1m' + text + '\033[0m'
 
 def login():
     session = requests.session()
@@ -71,7 +73,31 @@ def sorting_links(subject_links):
             #     notice_urls[x].append([url, subject_links[x][y].contents])
     return notice_urls, news_urls, resource_urls
 
-
+def terminal_display(
+        urls_title=None,
+        update_type=None,
+        sub_names=[],
+        message=None,
+        message_subject=[]):
+    print (bold(update_type+':'))
+    if (urls_title is not None):
+        check_for_no_update = sum([len(x) for x in urls_title])
+        if(check_for_no_update == 0):
+            print ("\tNo new " + update_type)
+        for x in range(len(sub_names)):
+            for y in range(len(urls_title[x])):
+                if(y == 0):
+                    print (bold('\n'+sub_names[x] + '-'))
+                print ('\t' + bold(str(y + 1))+'. ' + urls_title[x][y][1])
+                print ("\t\t" + urls_title[x][y][0])
+    else:
+        if (sum(message_subject) == 0):
+            print ("\tNo new " + update_type)
+        for x in range(len(sub_names)):
+            if(message_subject[x] != 0):
+                print (bold(sub_names[x]) + message)
+    print ('-' * 60 + '\n')
+    
 def main():
     """Displaying notices, news and other announcements, updating slides"""
     print ("\t\t" + notices.bold("**Nalanda**"))
