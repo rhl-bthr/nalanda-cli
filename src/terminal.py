@@ -98,7 +98,7 @@ def terminal_display(
     
 def main():
     """Displaying notices, news and other announcements, updating slides"""
-    print ("\t\t" + notices.bold("**Nalanda**"))
+    print ("\t\t" + bold("**Nalanda**"))
     slides_path, session = login()
     subject_names, subject_urls = subject_list_folders(slides_path)
     subject_links = get_all_links(subject_urls, session)
