@@ -3,11 +3,10 @@
 # Termi-Nalanda
 
 from __future__ import print_function
-import os, io
-import requests
-import slides
-import notices
 from bs4 import BeautifulSoup
+import os, io, requests
+
+import slides, notices
 
 INSTALLATION_FOLDER = os.path.join(os.path.expanduser('~'), '.termi-nalanda')
 def bold(text):
@@ -67,32 +66,28 @@ def sorting_links(subject_links):
                     [url, subject_links[x][y].contents[1].contents[0]])
             elif('forum/view.php?id' in url):
                 news_urls[x].append(url)
+            #Needs to be worked upon and added at a later stage.
             # elif('/mod/' in url and 'id' in url and 'index' not in url):
             #     notice_urls[x].append([url, subject_links[x][y].contents])
     return notice_urls, news_urls, res_urls
 
-def terminal_display(
-        urls_title=None,
-        update_type=None,
-        sub_names=[],
-        message=None,
-        message_subject=[]):
+def terminal_display(update_list=None,update_type=None,
+        sub_names=[], message=None):
     print (bold(update_type+':'))
-    if (urls_title is not None):
-        check_for_no_update = sum([len(x) for x in urls_title])
-        if(check_for_no_update == 0):
-            print ("\tNo new " + update_type)
+    check_for_no_update = sum([len(x) for x in update_list])
+    if(check_for_no_update == 0):
+        print ("\tNo new " + update_type)
+        return 0
+    if (message is None):
         for x in range(len(sub_names)):
-            for y in range(len(urls_title[x])):
+            for y in range(len(update_list[x])):
                 if(y == 0):
                     print (bold('\n'+sub_names[x] + '-'))
-                print ('\t' + bold(str(y + 1))+'. ' + urls_title[x][y][1])
-                print ("\t\t" + urls_title[x][y][0])
+                print ('\t' + bold(str(y + 1))+'. ' + update_list[x][y][1])
+                print ("\t\t" + update_list[x][y][0])
     else:
-        if (sum(message_subject) == 0):
-            print ("\tNo new " + update_type)
         for x in range(len(sub_names)):
-            if(message_subject[x] != 0):
+            if(len(update_list[x]) != 0):
                 print (bold(sub_names[x]) + message)
     print ('-' * 60 + '\n')
     
