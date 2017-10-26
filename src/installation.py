@@ -1,7 +1,6 @@
-import os
-import requests
 from bs4 import BeautifulSoup
-import io
+import os, io, requests
+
 from terminal import login
 
 INSTALLATION_FOLDER = os.path.join(os.path.expanduser('~'), '.termi-nalanda')

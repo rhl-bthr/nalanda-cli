@@ -1,6 +1,7 @@
 from __future__ import print_function
-import os, io
+import os, io, requests
 from bs4 import BeautifulSoup
+
 import terminal
 
 def get_news(session, sub_names, news_urls):
@@ -9,7 +10,7 @@ def get_news(session, sub_names, news_urls):
         for y in range(len(news_urls[x])):
             try:
                 result = session.get(news_urls[x][y])
-            except session.exceptions.ConnectionError:
+            except requests.exceptions.ConnectionError:
                 quit("No Internet Connection. Please retry")
             soup = BeautifulSoup(result.text, "html.parser")
             discussion_list = soup.find_all('tr', 'discussion')
