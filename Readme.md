@@ -4,10 +4,15 @@ It uses **bs4** and **requests** Libraries. It is used to access Nalanda - The E
 
 ### Requirements:
  - Ubuntu
- - Python2.7
+ - Python2.7 or higher
  - pip
 <br>
-
+### Development:
+If you want to contribute by solving any issue or adding a feature in this project, then keep in mind
+ - The code should be according to PEP8 Standards
+ - If a major feature/issue is being addressed, then use a new branch
+ - The commit messages should be descriptive
+<br>
 ### Installation:
 Clone the repository. Open it in a terminal and type: <br>
 ```shell
