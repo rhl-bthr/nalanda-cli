@@ -16,13 +16,15 @@ def login():
     session = requests.session()
     try:
         config = io.open(os.path.join(INSTALLATION_FOLDER, 'config.txt'), 'r')
+        config = (config.read()).split('\n')
+        session.post('http://nalanda.bits-pilani.ac.in/login/index.php', data={
+            'username': config[0],
+            'password': config[1],
+        })
     except IOError:
         quit("Unable to read from file. Please reinstall termi-Nalanda")
-    config = (config.read()).split('\n')
-    session.post('http://nalanda.bits-pilani.ac.in/login/index.php', data={
-        'username': config[0],
-        'password': config[1],
-    })
+    except requests.exceptions.ConnectionError:
+        quit("No Internet Connection. Please retry")
     return config[2], session
 
 # Updating Subject List and making folders
