@@ -21,10 +21,10 @@ def login():
             'username': config[0],
             'password': config[1],
         })
-    except IOError:
-        quit("Unable to read from file. Please reinstall termi-Nalanda")
     except requests.exceptions.ConnectionError:
         quit("No Internet Connection. Please retry")
+    except IOError:
+        quit("Unable to read from file. Please reinstall termi-Nalanda")
     return config[2], session
 
 # Updating Subject List and making folders
