@@ -4,12 +4,15 @@
 
 from __future__ import print_function
 from bs4 import BeautifulSoup
-import os, io, requests
+import os
+import io
+import requests
 import updates
 
 join = os.path.join
 
 INSTALL_PATH = join(os.path.expanduser('~'), '.termi-nalanda')
+
 
 def login():
     session = requests.session()
@@ -21,10 +24,11 @@ def login():
     })
     return config[2], session
 
+
 def sub_list_folders(slides_path):
     """Updating Subject List and making folders"""
-    name_file = io.open(join(INSTALL_PATH,'Subjects','name.txt'),'r')
-    url_file = io.open(join(INSTALL_PATH, 'Subjects','url.txt'), 'r')
+    name_file = io.open(join(INSTALL_PATH, 'Subjects', 'name.txt'), 'r')
+    url_file = io.open(join(INSTALL_PATH, 'Subjects', 'url.txt'), 'r')
     url_list = (url_file.read()).split('\n')
     sub_list = (name_file.read()).split('\n')
     for sub in sub_list:
@@ -32,6 +36,7 @@ def sub_list_folders(slides_path):
         if not os.path.exists(sub_path):
             os.makedirs(sub_path)
     return sub_list, url_list
+
 
 def get_all_links(sub_urls, session):
     """Getting all relevant links in each subject page"""
@@ -42,8 +47,10 @@ def get_all_links(sub_urls, session):
     ]
     return sub_links
 
+
 def sorting_links(sub_links):
-    res_urls, news_urls, notice_urls = ([[] for x in range(len(sub_links))] for y in range(3))
+    res_urls, news_urls, notice_urls = (
+        [[] for x in range(len(sub_links))] for y in range(3))
     for x in range(len(sub_links)):
         for y in range(len(sub_links[x])):
             url = (sub_links[x][y]).get('href')
@@ -54,13 +61,14 @@ def sorting_links(sub_links):
                     [url, sub_links[x][y].contents[1].contents[0]])
             elif('forum/view.php?id' in url):
                 news_urls[x].append(url)
-            #Needs to be worked upon and added at a later stage.
+            # Needs to be worked upon and added at a later stage.
             # elif('/mod/' in url and 'id' in url and 'index' not in url):
             #     notice_urls[x].append([url, sub_links[x][y].contents])
     return (notice_urls, news_urls, res_urls)
 
+
 def main():
-    """Displaying notices, news and other announcements, updating slides""" 
+    """Displaying notices, news and other announcements, updating slides"""
     try:
         slides_path, session = login()
         sub_names, sub_urls = sub_list_folders(slides_path)
@@ -73,6 +81,7 @@ def main():
         quit("Unable to read from file. Please reinstall termi-Nalanda")
     except KeyboardInterrupt:
         print("Stopped by user.")
+
 
 if(__name__ == '__main__'):
     main()
