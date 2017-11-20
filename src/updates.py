@@ -56,10 +56,10 @@ def term_display(update_list=None, update_type=None,
     if(no_update == 0):
         print ("\tNo new " + update_type)
         return 0
-    if (update_type=="Lectures"):
-        [print (bold(sub_names[x]) + " has new updates") for x in range(len(sub_names))
-         if len(update_list[x]) != 0]
-        print ("file://"+path)
+    if (update_type == "Lectures"):
+        [print (bold(sub_names[x]) + " has new updates")
+         for x in range(len(sub_names)) if len(update_list[x]) != 0]
+        print ("file://" + path)
     else:
         for x in range(len(sub_names)):
             for y in range(len(update_list[x])):
