@@ -50,22 +50,23 @@ def find_new(session, sub_names, urls_title, update_type):
 
 
 def term_display(update_list=None, update_type=None,
-                 sub_names=[], message=None):
+                 sub_names=[], path=None):
     print (bold(update_type + ':'))
     no_update = sum([len(x) for x in update_list])
     if(no_update == 0):
         print ("\tNo new " + update_type)
         return 0
-    if (message is None):
+    if (update_type=="Lectures"):
+        [print (bold(sub_names[x]) + " has new updates") for x in range(len(sub_names))
+         if len(update_list[x]) != 0]
+        print ("file://"+path)
+    else:
         for x in range(len(sub_names)):
             for y in range(len(update_list[x])):
                 if(y == 0):
                     print (bold('\n' + sub_names[x] + '-'))
                 print ('\t' + bold(str(y + 1)) + '. ' + update_list[x][y][1])
                 print ("\t\t" + update_list[x][y][0])
-    else:
-        [print (bold(sub_names[x]) + message) for x in range(len(sub_names))
-         if len(update_list[x]) != 0]
     print ('-' * 60 + '\n')
 
 
@@ -109,4 +110,4 @@ def main(session, sub_names, sorted_urls, path):
         session, sub_names, subject_news_url, 'News')
     term_display(unread_update, 'News', sub_names)
     update_list = download(session, sub_names, res_urls, path)
-    term_display(update_list, 'Lectures', sub_names, " has new updates")
+    term_display(update_list, 'Lectures', sub_names, path)
