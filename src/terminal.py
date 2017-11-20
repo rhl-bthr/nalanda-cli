@@ -11,26 +11,26 @@ import updates
 
 join = os.path.join
 
-INSTALL_PATH = join(os.path.expanduser('~'), '.termi-nalanda')
+INSTALL_PATH = join(os.path.expanduser("~"), ".termi-nalanda")
 
 
 def login():
     session = requests.session()
-    config = io.open(join(INSTALL_PATH, 'config.txt'), 'r')
-    config = (config.read()).split('\n')
-    session.post('http://nalanda.bits-pilani.ac.in/login/index.php', data={
-        'username': config[0],
-        'password': config[1],
+    config = io.open(join(INSTALL_PATH, "config.txt"), "r")
+    config = (config.read()).split("\n")
+    session.post("http://nalanda.bits-pilani.ac.in/login/index.php", data={
+        "username": config[0],
+        "password": config[1],
     })
     return config[2], session
 
 
 def sub_list_folders(slides_path):
     """Updating Subject List and making folders"""
-    name_file = io.open(join(INSTALL_PATH, 'Subjects', 'name.txt'), 'r')
-    url_file = io.open(join(INSTALL_PATH, 'Subjects', 'url.txt'), 'r')
-    url_list = (url_file.read()).split('\n')
-    sub_list = (name_file.read()).split('\n')
+    name_file = io.open(join(INSTALL_PATH, "Subjects", "name.txt"), "r")
+    url_file = io.open(join(INSTALL_PATH, "Subjects", "url.txt"), "r")
+    url_list = (url_file.read()).split("\n")
+    sub_list = (name_file.read()).split("\n")
     for sub in sub_list:
         sub_path = join(slides_path, sub)
         if not os.path.exists(sub_path):
@@ -42,7 +42,7 @@ def get_all_links(sub_urls, session):
     """Getting all relevant links in each subject page"""
     sub_links = [
         BeautifulSoup(session.get(sub).text, "html.parser")
-        .find_all('a', {'onclick': ""})
+        .find_all("a", {"onclick": ""})
         for sub in sub_urls
     ]
     return sub_links
@@ -53,16 +53,16 @@ def sorting_links(sub_links):
         [[] for x in range(len(sub_links))] for y in range(3))
     for x in range(len(sub_links)):
         for y in range(len(sub_links[x])):
-            url = (sub_links[x][y]).get('href')
-            if('resource/view.php?id' in url or 'folder/view.php?id=' in url):
+            url = (sub_links[x][y]).get("href")
+            if("resource/view.php?id" in url or "folder/view.php?id=" in url):
                 res_urls[x].append(url)
-            elif('page/view.php?id' in url):
+            elif("page/view.php?id" in url):
                 notice_urls[x].append(
                     [url, sub_links[x][y].contents[1].contents[0]])
-            elif('forum/view.php?id' in url):
+            elif("forum/view.php?id" in url):
                 news_urls[x].append(url)
             # Needs to be worked upon and added at a later stage.
-            # elif('/mod/' in url and 'id' in url and 'index' not in url):
+            # elif("/mod/" in url and "id" in url and "index" not in url):
             #     notice_urls[x].append([url, sub_links[x][y].contents])
     return (notice_urls, news_urls, res_urls)
 
@@ -83,5 +83,5 @@ def main():
         print("Stopped by user.")
 
 
-if(__name__ == '__main__'):
+if(__name__ == "__main__"):
     main()
