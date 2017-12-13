@@ -4,10 +4,7 @@
 
 from __future__ import print_function
 from bs4 import BeautifulSoup
-import os
-import io
-import requests
-import updates
+import os, io, requests, updates
 
 join = os.path.join
 
