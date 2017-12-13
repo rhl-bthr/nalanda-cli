@@ -15,7 +15,7 @@ def login():
     session = requests.session()
     config = io.open(join(INSTALL_PATH, "config.txt"), "r")
     config = (config.read()).split("\n")
-    session.post("http://nalanda.bits-pilani.ac.in/login/index.php", data={u
+    session.post("http://nalanda.bits-pilani.ac.in/login/index.php", data={
         "username": config[0],
         "password": config[1],
     })
