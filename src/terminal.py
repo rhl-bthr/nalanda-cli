@@ -4,10 +4,7 @@
 
 from __future__ import print_function
 from bs4 import BeautifulSoup
-import os
-import io
-import requests
-import updates
+import os, io, requests, updates
 
 join = os.path.join
 
@@ -18,7 +15,7 @@ def login():
     session = requests.session()
     config = io.open(join(INSTALL_PATH, "config.txt"), "r")
     config = (config.read()).split("\n")
-    session.post("http://nalanda.bits-pilani.ac.in/login/index.php", data={
+    session.post("http://nalanda.bits-pilani.ac.in/login/index.php", data={u
         "username": config[0],
         "password": config[1],
     })
