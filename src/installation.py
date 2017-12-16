@@ -83,11 +83,11 @@ def main():
         dump, session = login()
         get_sub_list(session)
     except KeyboardInterrupt:
-        print "Installation cancelled by user. Plase retry"
+        print "Installation cancelled by user. Please retry."
     except requests.exceptions.ConnectionError:
-        quit("No Internet Connection. Please retry")
+        quit("No Internet Connection. Please retry.")
     except IOError:
-        quit("Unable to read from file. Please reinstall termi-Nalanda")
+        quit("Unable to read from file. Please reinstall termi-Nalanda.")
 
 
 if(__name__ == "__main__"):
