@@ -4,7 +4,7 @@ try:
     import io
     import requests
 except ImportError:
-    quit("Required Libraries aren't installed. Please restart the installaition")
+    quit("Required Libraries aren't installed. Please restart installation.")
 
 join = os.path.join
 INSTALL_PATH = join(os.path.expanduser("~"), ".termi-nalanda")
@@ -83,7 +83,7 @@ def main():
         dump, session = login()
         get_sub_list(session)
     except KeyboardInterrupt:
-        print "Installation cancelled by user. Please retry."
+        print("Installation cancelled by user. Please retry.")
     except requests.exceptions.ConnectionError:
         quit("No Internet Connection. Please retry.")
     except IOError:
