@@ -51,23 +51,22 @@ def find_new(session, sub_names, urls_title, update_type):
 
 def term_display(update_list=None, update_type=None,
                  sub_names=[], path=None):
-    print (bold(update_type + ":"))
+    display.text_reset(bold(update_type + ":"))
     no_update = sum([len(x) for x in update_list])
     if(no_update == 0):
-        print ("\tNo new " + update_type)
+        display.text_add("\tNo new " + update_type)
         return 0
     if (update_type == "Lectures"):
-        [print (bold(sub_names[x]) + " has new updates")
+        [display.text_add(bold(sub_names[x]) + " has new updates")
          for x in range(len(sub_names)) if len(update_list[x]) != 0]
-        print ("file://" + path)
+        display.text_add("file://" + path)
     else:
         for x in range(len(sub_names)):
             for y in range(len(update_list[x])):
                 if(y == 0):
-                    print (bold("\n" + sub_names[x] + "-"))
-                print ("\t" + bold(str(y + 1)) + ". " + update_list[x][y][1])
-                print ("\t\t" + update_list[x][y][0])
-    print ("-" * 60 + "\n")
+                    display.text_add(bold("\n" + sub_names[x] + "-"))
+                display.text_add("\t" + bold(str(y + 1)) + ". " + update_list[x][y][1])
+                display.text_add("\t\t" + update_list[x][y][0])
 
 
 def download(session, sub_names, res_urls, path):
@@ -99,15 +98,25 @@ def download(session, sub_names, res_urls, path):
     return sub_updates
 
 
-def main(session, sub_names, sorted_urls, path):
-    notice_urls, news_urls, res_urls = sorted_urls
-    print ("\t\t" + bold("**Nalanda**"))
-    unread_update = find_new(
-        session, sub_names, notice_urls, "Notices")
-    term_display(unread_update, "Notices", sub_names)
-    subject_news_url = get_news(session, sub_names, news_urls)
-    unread_update = find_new(
-        session, sub_names, subject_news_url, "News")
-    term_display(unread_update, "News", sub_names)
-    update_list = download(session, sub_names, res_urls, path)
-    term_display(update_list, "Lectures", sub_names, path)
+class main:
+    def __init__(self, session, sub_names, sorted_urls, path):
+        self.urls = sorted_urls
+        self.sion = session
+        self.s_name = sub_names
+        self.path = path
+        print ("\t\t" + bold("**Nalanda**"))
+    def show_notice(self):
+        unread_update = find_new(self.sion, self.s_name, self.urls, "Notices")
+        term_display(unread_update, "Notices", self.s_name)
+    def show_news(self):
+        subject_news_url = get_news(self.sion, self.s_name, self.urls)
+        unread_update = find_new(
+        self.sion, self.s_name, subject_news_url, "News")
+        term_display(unread_update, "News", self.s_name)
+    def show_lect(self):
+        update_list = download(self.sion, self.s_name, self.urls, self.path)
+        term_display(update_list, "Lectures", self.s_name, self.path)
+    def show_all(self):
+        self.show_notice()
+        self.show_news()
+        self.show_lect()

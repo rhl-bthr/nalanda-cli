@@ -4,7 +4,11 @@
 
 from __future__ import print_function
 from bs4 import BeautifulSoup
-import os, io, requests, updates
+import os
+import io
+import requests
+import output_console
+import updates
 
 join = os.path.join
 
@@ -71,7 +75,8 @@ def main():
         sub_names, sub_urls = sub_list_folders(slides_path)
         sub_links = get_all_links(sub_urls, session)
         sorted_links = sorting_links(sub_links)
-        updates.main(session, sub_names, sorted_links, slides_path)
+        upMain = updates.main(session, sub_names, sorted_links, slides_path)
+        display.dashify(upMain)
     except requests.exceptions.ConnectionError:
         quit("No Internet Connection. Please retry")
     except IOError:
