@@ -59,8 +59,8 @@ def sorting_links(sub_links):
             elif("page/view.php?id" in url):
                 try:
                     notice_urls[x].append(
-                    [url, sub_links[x][y].contents[1].contents[0]])
-                except:
+                        [url, sub_links[x][y].contents[1].contents[0]])
+                except IndexError:
                     continue
             elif("forum/view.php?id" in url):
                 news_urls[x].append(url)
