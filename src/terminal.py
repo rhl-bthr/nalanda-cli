@@ -57,8 +57,11 @@ def sorting_links(sub_links):
             if("resource/view.php?id" in url or "folder/view.php?id=" in url):
                 res_urls[x].append(url)
             elif("page/view.php?id" in url):
-                notice_urls[x].append(
+                try:
+                    notice_urls[x].append(
                     [url, sub_links[x][y].contents[1].contents[0]])
+                except:
+                    continue
             elif("forum/view.php?id" in url):
                 news_urls[x].append(url)
             # Needs to be worked upon and added at a later stage.
