@@ -40,6 +40,6 @@ class display_box:
         self.allbtn = Button(self.dashF, text="All", command=self.c['all'])
         self.allbtn.pack()
 
+
 canvas = Tk()
 display = display_box(canvas)
-
