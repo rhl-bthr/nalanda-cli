@@ -109,7 +109,7 @@ class main:
         self.sion = session
         self.s_name = sub_names
         self.path = path
-        print ("\t\t" + bold("**Nalanda**"))
+        print("\t\t" + bold("**Nalanda**"))
 
     def show_notice(self, reset=1):
         unread_update = find_new(
