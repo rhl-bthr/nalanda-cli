@@ -17,7 +17,7 @@ class display_box:
         self.label.config(text = self.text)
     def dashify(self, upMainObj):
         self.u = upMainObj
-        self.dashF = Frame(main)
+        self.dashF = Frame(self.main)
         self.dashF.grid(row=1, column=2)
         self.c = {
             'notice' : self.u.show_notice,
@@ -29,7 +29,7 @@ class display_box:
         self.noticebtn.pack()
         self.newsbtn = Button(self.dashF, text = "News!", command = self.c['news'])
         self.newsbtn.pack()
-        self.lecturesbtn = Button(self.dashF, text = "Lectures!", command = self.c['lectures'])
+        self.lecturesbtn = Button(self.dashF, text = "Lectures!", command = self.c['lect'])
         self.lecturesbtn.pack()
         self.allbtn = Button(self.dashF, text = "All", command = self.c['all'])
         self.allbtn.pack()

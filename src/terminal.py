@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import os
 import io
 import requests
-import output_console
+from output_console import *
 import updates
 
 join = os.path.join
@@ -58,8 +58,11 @@ def sorting_links(sub_links):
             if("resource/view.php?id" in url or "folder/view.php?id=" in url):
                 res_urls[x].append(url)
             elif("page/view.php?id" in url):
-                notice_urls[x].append(
-                    [url, sub_links[x][y].contents[1].contents[0]])
+                try:
+                    notice_urls[x].append(
+                        [url, sub_links[x][y].contents[1].contents[0]])
+                except IndexError:
+                    print("Check!")
             elif("forum/view.php?id" in url):
                 news_urls[x].append(url)
             # Needs to be worked upon and added at a later stage.
@@ -77,6 +80,8 @@ def main():
         sorted_links = sorting_links(sub_links)
         upMain = updates.main(session, sub_names, sorted_links, slides_path)
         display.dashify(upMain)
+        upMain.show_all()
+        canvas.mainloop()
     except requests.exceptions.ConnectionError:
         quit("No Internet Connection. Please retry")
     except IOError:

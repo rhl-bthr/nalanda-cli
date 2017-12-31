@@ -3,6 +3,7 @@ import os
 import io
 import requests
 from bs4 import BeautifulSoup
+from output_console import *
 
 join = os.path.join
 INSTALL_PATH = join(os.path.expanduser("~"), ".termi-nalanda")
@@ -51,7 +52,7 @@ def find_new(session, sub_names, urls_title, update_type):
 
 def term_display(update_list=None, update_type=None,
                  sub_names=[], path=None):
-    display.text_reset(bold(update_type + ":"))
+    display.text_add(bold(update_type + ":"))
     no_update = sum([len(x) for x in update_list])
     if(no_update == 0):
         display.text_add("\tNo new " + update_type)
@@ -105,18 +106,21 @@ class main:
         self.s_name = sub_names
         self.path = path
         print ("\t\t" + bold("**Nalanda**"))
-    def show_notice(self):
-        unread_update = find_new(self.sion, self.s_name, self.urls, "Notices")
+    def show_notice(self, reset=1):
+        unread_update = find_new(self.sion, self.s_name, self.urls[0], "Notices")
+        if reset: display.text_reset("")
         term_display(unread_update, "Notices", self.s_name)
-    def show_news(self):
-        subject_news_url = get_news(self.sion, self.s_name, self.urls)
+    def show_news(self, reset=1):
+        subject_news_url = get_news(self.sion, self.s_name, self.urls[1])
         unread_update = find_new(
         self.sion, self.s_name, subject_news_url, "News")
+        if reset: display.text_reset("")
         term_display(unread_update, "News", self.s_name)
-    def show_lect(self):
-        update_list = download(self.sion, self.s_name, self.urls, self.path)
+    def show_lect(self, reset=1):
+        update_list = download(self.sion, self.s_name, self.urls[2], self.path)
+        if reset: display.text_reset("")
         term_display(update_list, "Lectures", self.s_name, self.path)
     def show_all(self):
-        self.show_notice()
-        self.show_news()
-        self.show_lect()
+        self.show_notice(0)
+        self.show_news(0)
+        self.show_lect(0)
