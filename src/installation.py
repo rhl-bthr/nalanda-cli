@@ -20,11 +20,9 @@ def take_config():
     email = input("\nEnter BITS ID [Eg: f2016015]\n") + \
         "@pilani.bits-pilani.ac.in"
     pwd = input("Enter Nalanda Password\n")
-    path = input("Enter path to store lecture slides [Refer Readme]\n")
     config_path = join(INSTALL_PATH, "config.txt")
-    path = join(os.path.expanduser("~"), path)
     f = io.open(config_path, "w")
-    config = (email + "\n" + pwd + "\n" + path)
+    config = (email + "\n" + pwd)
     try:
         f.write(config)
     except TypeError:
@@ -38,8 +36,8 @@ def make_folders():
 
 
 def get_sub_list(session):
-    url_file_name = join(INSTALL_PATH, "Subjects", "url.txt")
-    name_file_name = join(INSTALL_PATH, "Subjects", "name.txt")
+    url_file_name = join(INSTALL_PATH, "sub-url.txt")
+    name_file_name = join(INSTALL_PATH, "sub-name.txt")
     url_file = io.open(url_file_name, "w")
     name_file = io.open(name_file_name, "w")
     result = session.get("http://nalanda.bits-pilani.ac.in/my")

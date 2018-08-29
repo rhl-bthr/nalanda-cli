@@ -7,43 +7,24 @@ import requests
 join = os.path.join
 
 INSTALL_PATH = join(os.path.expanduser("~"), ".nalanda")
-
+SLIDES_PATH = join(os.path.expanduser("~"), "BITS")
+SUB_NAMES = open(join(INSTALL_PATH, "sub-name.txt")).read().split("\n")
+SUB_URLS = open(join(INSTALL_PATH, "sub-url.txt")).read().split("\n")
+ZIP_FILE_LINK = "http://nalanda.bits-pilani.ac.in/mod/folder/download_folder.php"
 
 def login():
     session = requests.session()
-    config = open(join(INSTALL_PATH, "config.txt"), "r")
-    config = (config.read()).split("\n")
+    username, password = open(join(INSTALL_PATH, "config.txt")).read().split("\n")
     session.post("http://nalanda.bits-pilani.ac.in/login/index.php", data={
-        "username": config[0],
-        "password": config[1],
+        "username": username,
+        "password": password,
     })
-    return config[2], session
+    return session
 
 
-def sub_list_folders(slides_path):
-    """Updating Subject List and making folders"""
-    name_file = open(join(INSTALL_PATH, "Subjects", "name.txt"), "r")
-    url_file = open(join(INSTALL_PATH, "Subjects", "url.txt"), "r")
-    url_list = (url_file.read()).split("\n")
-    sub_list = (name_file.read()).split("\n")
-    for sub in sub_list:
-        sub_path = join(slides_path, sub)
-        if not os.path.exists(sub_path):
-            os.makedirs(sub_path)
-    return sub_list, url_list
-
-
-def get_all_links(sub_urls, session):
-    """Getting all relevant links in each subject page"""
-    sub_links = [
-        BeautifulSoup(session.get(sub).text, "html.parser")
-        .find_all("a", {"onclick": ""})
-        for sub in sub_urls
-    ]
-    return sub_links
-
-
-def sorting_links(sub_links):
+def sorting_links():
+    sub_links = [BeautifulSoup(session.get(sub).text, "html.parser")
+        .find_all("a", {"onclick": ""}) for sub in SUB_URLS]
     res_urls, news_urls, notice_urls = (
         [[] for x in range(len(sub_links))] for y in range(3))
 
@@ -67,9 +48,9 @@ def bold(text):
     return "\033[1m" + text + "\033[0m"
 
 
-def get_news(session, sub_names, news_urls):
-    subject_news_url = [[] for x in range(len(sub_names))]
-    for x in range(len(sub_names)):
+def get_news(session, news_urls):
+    subject_news_url = [[] for x in range(len(SUB_NAMES))]
+    for x in range(len(SUB_NAMES)):
         for y in range(len(news_urls[x])):
             result = session.get(news_urls[x][y])
             soup = BeautifulSoup(result.text, "html.parser")
@@ -84,99 +65,81 @@ def get_news(session, sub_names, news_urls):
     return subject_news_url
 
 
-def find_new(session, sub_names, urls_title, update_type):
-    new_urls_title = [[]for x in range(len(sub_names))]
-    for x in range(len(sub_names)):
-        subject_file = io.open(
-            os.path.join(
-                INSTALL_PATH,
-                update_type,
-                sub_names[x]),
-            "a+")
-        subject_file.seek(0)
-        subject_read = (subject_file.read()).split("\n")
-        for y in range(len(urls_title[x])):
-            if (urls_title[x][y][1] in subject_read):
-                pass
-            else:
-                new_urls_title[x].append(urls_title[x][y])
-                subject_file.write("\n" + urls_title[x][y][1])
+def find_new(session, urls_title, news_urls):
+    new_urls_title = [[]for x in range(len(SUB_NAMES))]
+    for x in range(len(SUB_NAMES)):
+        subject_file = open(os.path.join(INSTALL_PATH, SUB_NAMES[x]), "a+")
+        subject_read = (subject_file.seek(0).read()).split("\n")
+        for y in (urls_title[x] + news_urls[x]):
+            if y[1] not in subject_read:
+                new_urls_title[x].append(y)
+                subject_file.write("\n" + y[1])
     return new_urls_title
 
 
-def term_display(update_list=None, update_type=None,
-                 sub_names=[], path=None):
-    print (bold(update_type + ":"))
-    no_update = sum([len(x) for x in update_list])
-    if(no_update == 0):
-        print ("\tNo new " + update_type)
-        return 0
-    if (update_type == "Lectures"):
-        [print (bold(sub_names[x]) + " has new updates")
-         for x in range(len(sub_names)) if len(update_list[x]) != 0]
-        print ("file://" + path)
+def term_display(update_news=None, new_lectures):
+    print(bold("News:"))
+    if(num_news == sum([len(x) for x in update_news])):
+        print("\tNo updates")
     else:
-        for x in range(len(sub_names)):
-            for y in range(len(update_list[x])):
-                if(y == 0):
-                    print (bold("\n" + sub_names[x] + "-"))
-                print ("\t" + bold(str(y + 1)) + ". " + update_list[x][y][1])
-                print ("\t\t" + update_list[x][y][0])
+        for x in range(len(SUB_NAMES)):
+            if update_news[x] != []:
+                print(bold("\n" + SUB_NAMES[x] + "-"))
+            [print("\t" + bold(str(y + 1)) + ". " + update_news[x][y][1] + "\n\t\t" +
+                   update_news[x][y][0]) for y in range(len(update_news[x]))]
+
     print ("-" * 60 + "\n")
 
+    print(bold("Lectures:"))
+    if(num_notices == sum([len(x) for x in new_lectures])):
+        print("\tNo updates")
+    else:
+        [print (bold(SUB_NAMES[x]) + " has new updates")
+        for x in range(len(SUB_NAMES)) if len(update_list[x]) != 0]
+        print ("file://" + SLIDES_PATH)
 
-def download(session, sub_names, res_urls, path):
-    sub_updates = [[] for x in sub_names]
-    for x in range(len(sub_names)):
-        done_slides_file = io.open(
-            join(
-                INSTALL_PATH,
-                "Lectures",
-                sub_names[x] +
-                ".txt"),
-            "a+")
-        done_slides_file.seek(0)
-        done_slides = done_slides_file.read().split("\n")
-        for y in range(len(res_urls[x])):
-            if (res_urls[x][y] not in done_slides):
-                if ("folder/view" in res_urls[x][y]):
-                    id_param = res_urls[x][y].split("php")[1]
-                    result = session.get(
-                        "http://nalanda.bits-pilani.ac.in/mod/folder/download_folder.php" + id_param)
-                else:
-                    result = session.get(res_urls[x][y])
-                file_name = result.headers["content-disposition"].split('e="')[
-                    1].split('"')[0]
-                with io.open(join(path, sub_names[x], file_name), "wb") as f:
-                    f.write(result.content)
-                done_slides_file.write(res_urls[x][y] + "\n")
-                sub_updates[x].append([])
+
+def download(session, res_urls):
+    for sub in SUB_NAMES:
+        sub_path = join(SLIDES_PATH, sub)
+        if not os.path.exists(sub_path):
+            os.makedirs(sub_path)
+
+    sub_updates = [[] for x in SUB_NAMES]
+    for x in range(len(SUB_NAMES)):
+        done_slides_file = open(join(
+            INSTALL_PATH, "Lectures", SUB_NAMES[x]), "a+")
+        done_slides = done_slides_file.seek(0).read().split("\n")
+        new_slides = res_urls[x] - done_slides
+        for y in new_slides:
+            if "folder/view" in y:
+                id_param = y.split("php")[1]
+                result = session.get(ZIP_FILE_LINK + id_param)
+            else:
+                result = session.get(y)
+            file_name = result.headers["content-disposition"].split('e="')[1].split('"')[0]
+            with open(join(SLIDES_PATH, SUB_NAMES[x], file_name), "wb") as f:
+                f.write(result.content)
+            done_slides_file.write(y + "\n")
+    
     return sub_updates
 
 
-def get_updates(session, sub_names, sorted_urls, path):
+def get_updates(session, sorted_urls):
     notice_urls, news_urls, res_urls = sorted_urls
-    print ("\t\t" + bold("**Nalanda**"))
-    unread_update = find_new(
-        session, sub_names, notice_urls, "Notices")
-    term_display(unread_update, "Notices", sub_names)
-    subject_news_url = get_news(session, sub_names, news_urls)
-    unread_update = find_new(
-        session, sub_names, subject_news_url, "News")
-    term_display(unread_update, "News", sub_names)
-    update_list = download(session, sub_names, res_urls, path)
-    term_display(update_list, "Lectures", sub_names, path)
-
+    subject_news_url = get_news(session, news_urls)
+    unread_news = find_new(session, notice_urls, subject_news_url)
+    new_lectures = download(session, res_urls)
+    term_display(unread_news, new_lectures)
 
 
 def main():
     """Displaying notices, news and other announcements, updating slides"""
     try:
-        slides_path, session = login()
-        sub_names, sub_urls = sub_list_folders(slides_path)
-        sub_links = get_all_links(sub_urls, session)
-        sorted_links = sorting_links(sub_links)
-        get_updates(session, sub_names, sorted_links, slides_path)
+        print ("\t\t" + bold("**nalanda-cli**"))
+        session = login()
+        sorted_links = sorting_links()
+        get_updates(session, sorted_links)
     except requests.exceptions.ConnectionError:
         quit("No Internet Connection. Please retry")
     except IOError:
