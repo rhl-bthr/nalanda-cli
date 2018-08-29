@@ -1,22 +1,17 @@
 #! /usr/bin/python
-# Pro-Panda
-# Termi-Nalanda
 
-from __future__ import print_function
 from bs4 import BeautifulSoup
 import os
-import io
 import requests
-import updates
 
 join = os.path.join
 
-INSTALL_PATH = join(os.path.expanduser("~"), ".termi-nalanda")
+INSTALL_PATH = join(os.path.expanduser("~"), ".nalanda")
 
 
 def login():
     session = requests.session()
-    config = io.open(join(INSTALL_PATH, "config.txt"), "r")
+    config = open(join(INSTALL_PATH, "config.txt"), "r")
     config = (config.read()).split("\n")
     session.post("http://nalanda.bits-pilani.ac.in/login/index.php", data={
         "username": config[0],
@@ -27,8 +22,8 @@ def login():
 
 def sub_list_folders(slides_path):
     """Updating Subject List and making folders"""
-    name_file = io.open(join(INSTALL_PATH, "Subjects", "name.txt"), "r")
-    url_file = io.open(join(INSTALL_PATH, "Subjects", "url.txt"), "r")
+    name_file = open(join(INSTALL_PATH, "Subjects", "name.txt"), "r")
+    url_file = open(join(INSTALL_PATH, "Subjects", "url.txt"), "r")
     url_list = (url_file.read()).split("\n")
     sub_list = (name_file.read()).split("\n")
     for sub in sub_list:
@@ -51,6 +46,7 @@ def get_all_links(sub_urls, session):
 def sorting_links(sub_links):
     res_urls, news_urls, notice_urls = (
         [[] for x in range(len(sub_links))] for y in range(3))
+
     for x in range(len(sub_links)):
         for y in range(len(sub_links[x])):
             url = (sub_links[x][y]).get("href")

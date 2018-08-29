@@ -1,2 +1,2 @@
 #! /bin/bash
-python ~/.termi-nalanda/terminal.py
+python ~/.nalanda/terminal.py
