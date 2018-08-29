@@ -11,11 +11,13 @@ SLIDES_PATH = join(os.path.expanduser("~"), "BITS")
 SUB_NAMES = open(join(INSTALL_PATH, "sub-name.txt")).read().split("\n")
 SUB_URLS = open(join(INSTALL_PATH, "sub-url.txt")).read().split("\n")
 ZIP_FILE_LINK = "http://nalanda.bits-pilani.ac.in/mod/folder/download_folder.php"
+NALANDA_LOGIN = "http://nalanda.bits-pilani.ac.in/login/index.php"
+
 
 def login():
     session = requests.session()
     username, password = open(join(INSTALL_PATH, "config.txt")).read().split("\n")
-    session.post("http://nalanda.bits-pilani.ac.in/login/index.php", data={
+    session.post(NALANDA_LOGIN, data={
         "username": username,
         "password": password,
     })
@@ -38,9 +40,6 @@ def sorting_links():
                     [url, sub_links[x][y].contents[1].contents[0]])
             elif("forum/view.php?id" in url):
                 news_urls[x].append(url)
-            # Needs to be worked upon and added at a later stage.
-            # elif("/mod/" in url and "id" in url and "index" not in url):
-            #     notice_urls[x].append([url, sub_links[x][y].contents])
     return (notice_urls, news_urls, res_urls)
 
 
@@ -77,7 +76,7 @@ def find_new(session, urls_title, news_urls):
     return new_urls_title
 
 
-def term_display(update_news=None, new_lectures):
+def term_display(update_news, new_lectures):
     print(bold("News:"))
     if(num_news == sum([len(x) for x in update_news])):
         print("\tNo updates")
@@ -125,21 +124,17 @@ def download(session, res_urls):
     return sub_updates
 
 
-def get_updates(session, sorted_urls):
-    notice_urls, news_urls, res_urls = sorted_urls
-    subject_news_url = get_news(session, news_urls)
-    unread_news = find_new(session, notice_urls, subject_news_url)
-    new_lectures = download(session, res_urls)
-    term_display(unread_news, new_lectures)
-
-
 def main():
     """Displaying notices, news and other announcements, updating slides"""
     try:
         print ("\t\t" + bold("**nalanda-cli**"))
         session = login()
-        sorted_links = sorting_links()
-        get_updates(session, sorted_links)
+        notice_urls, news_urls, res_urls = sorting_links()
+        subject_news_url = get_news(session, news_urls)
+        unread_news = find_new(session, notice_urls, subject_news_url)
+        new_lectures = download(session, res_urls)
+        term_display(unread_news, new_lectures)
+
     except requests.exceptions.ConnectionError:
         quit("No Internet Connection. Please retry")
     except IOError:
