@@ -7,7 +7,7 @@ except ImportError:
     quit("Required Libraries aren't installed. Please restart installation.")
 
 join = os.path.join
-INSTALL_PATH = join(os.path.expanduser("~"), ".nalanda")
+INSTALL_PATH = join(os.path.expanduser("~"), ".nalanda-cli")
 FOLDER_LIST = ["News", "Notices", "Lectures", "Subjects"]
 
 try:

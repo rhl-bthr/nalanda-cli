@@ -6,7 +6,7 @@ import requests
 
 join = os.path.join
 
-INSTALL_PATH = join(os.path.expanduser("~"), ".nalanda")
+INSTALL_PATH = join(os.path.expanduser("~"), ".nalanda-cli")
 SLIDES_PATH = join(os.path.expanduser("~"), "BITS")
 SUB_NAMES = open(join(INSTALL_PATH, "sub-name.txt")).read().split("\n")
 SUB_URLS = open(join(INSTALL_PATH, "sub-url.txt")).read().split("\n")
