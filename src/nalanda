@@ -109,6 +109,7 @@ def download(session, res_urls):
                 result = session.get(ZIP_FILE_LINK + id_param)
             else:
                 result = session.get(y)
+
             file_name = result.headers["content-disposition"].split('e="')[1].split('"')[0]
             with open(join(SLIDES_PATH, SUB_NAMES[x], file_name), "wb") as f:
                 f.write(result.content)
@@ -117,8 +118,7 @@ def download(session, res_urls):
     return sub_updates
 
 
-def main():
-    """Displaying notices, news and other announcements, updating slides"""
+if __name__ == "__main__":
     try:
         print ("\t\t" + bold("**nalanda-cli**"))
         session = requests.session()
@@ -135,7 +135,3 @@ def main():
         quit("Unable to read from file. Please reinstall termi-Nalanda")
     except KeyboardInterrupt:
         print("Stopped by user.")
-
-
-if(__name__ == "__main__"):
-    main()
