@@ -8,8 +8,11 @@ try:
 except ImportError:
     quit("Required Libraries aren't installed. Please restart installation.")
 
-join = os.path.join
-INSTALL_PATH = join(os.path.expanduser("~"), ".nalanda-cli")
+CONFIG_FILE = os.path.join(os.path.expanduser("~"), ".nalanda-cli","config.json")
+SUBJECTS_FILE = os.path.join(os.path.expanduser("~"), ".nalanda-cli","subjects.json")
+LOGIN_LINK = "http://nalanda.bits-pilani.ac.in/login/index.php"
+HOMEPAGE_LINK = "http://nalanda.bits-pilani.ac.in/my"
+
 session = requests.session()
 
 
@@ -23,20 +26,18 @@ try:
 
         config["password"] = getpass(prompt = "Enter nalanda password:")
 
-        result = session.post(
-            "http://nalanda.bits-pilani.ac.in/login/index.php",
-            data = config)
+        result = session.post(LOGIN_LINK, data = config)
         result = BeautifulSoup(result.text, "html.parser")
 
         if not result.find_all("a", {"id": "loginerrormessage"}):
             break
         print("Username or Password Incorrect. Please retry")
 
-    with open(join(INSTALL_PATH, "config.json"), "w") as f:
+    with open(CONFIG_FILE, "w") as f:
         json.dumps(config, f)
 
-    with open(join(INSTALL_PATH, "subjects.json"), "w") as sub_file:
-        result = session.get("http://nalanda.bits-pilani.ac.in/my")
+    with open(SUBJECTS_FILE, "w") as sub_file:
+        result = session.get(HOMEPAGE_LINK)
         soup = BeautifulSoup(result.text, "html.parser")
 
         for x in soup.find_all("div", "column c1"):
