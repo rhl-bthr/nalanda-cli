@@ -3,25 +3,18 @@
 from bs4 import BeautifulSoup
 import os
 import requests
+import json
 
 join = os.path.join
 
 INSTALL_PATH = join(os.path.expanduser("~"), ".nalanda-cli")
 SLIDES_PATH = join(os.path.expanduser("~"), "BITS")
-SUB_NAMES = open(join(INSTALL_PATH, "sub-name.txt")).read().split("\n")
-SUB_URLS = open(join(INSTALL_PATH, "sub-url.txt")).read().split("\n")
+subs = json.load(open(join(INSTALL_PATH, "subjects.json"), "w"))
+SUB_NAMES = subs.keys()
+SUB_URLS = subs.values()
+
 ZIP_FILE_LINK = "http://nalanda.bits-pilani.ac.in/mod/folder/download_folder.php"
 NALANDA_LOGIN = "http://nalanda.bits-pilani.ac.in/login/index.php"
-
-
-def login():
-    session = requests.session()
-    username, password = open(join(INSTALL_PATH, "config.txt")).read().split("\n")
-    session.post(NALANDA_LOGIN, data={
-        "username": username,
-        "password": password,
-    })
-    return session
 
 
 def sorting_links():
@@ -128,7 +121,8 @@ def main():
     """Displaying notices, news and other announcements, updating slides"""
     try:
         print ("\t\t" + bold("**nalanda-cli**"))
-        session = login()
+        session = requests.session()
+        session.post(NALANDA_LOGIN, data=json.loads(open(join(INSTALL_PATH, "config.json"))))
         notice_urls, news_urls, res_urls = sorting_links()
         subject_news_url = get_news(session, news_urls)
         unread_news = find_new(session, notice_urls, subject_news_url)

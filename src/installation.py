@@ -1,5 +1,6 @@
 import os
 from getpass import getpass
+import json
 
 try:
     from bs4 import BeautifulSoup
@@ -13,43 +14,35 @@ session = requests.session()
 
 
 try:
+    config = {}
+    name_url_pair = {}
+
     while True:
-        email = input("\nEnter BITS ID [Eg: f2016015]\n")
-        email += "@pilani.bits-pilani.ac.in"
+        config["username"] = input("\nEnter BITS ID [Eg: f2016015]\n") +
+                          "@pilani.bits-pilani.ac.in"
 
-        password = getpass(prompt = "Enter nalanda password:")
-
-        with open(join(INSTALL_PATH, "config.txt"), "w") as f:
-            config = email + "\n" + password
-            f.write(config)
+        config["password"] = getpass(prompt = "Enter nalanda password:")
 
         result = session.post(
             "http://nalanda.bits-pilani.ac.in/login/index.php",
-            data={
-                "username": email,
-                "password": password,
-            })
+            data = config)
         result = BeautifulSoup(result.text, "html.parser")
 
         if not result.find_all("a", {"id": "loginerrormessage"}):
             break
         print("Username or Password Incorrect. Please retry")
 
+    with open(join(INSTALL_PATH, "config.json"), "w") as f:
+        json.dumps(config, f)
 
-    with open(join(INSTALL_PATH, "sub-url.txt"), "w") as url_file:
-        with open(join(INSTALL_PATH, "sub-name.txt"), "w") as name_file:
+    with open(join(INSTALL_PATH, "subjects.json"), "w") as sub_file:
+        result = session.get("http://nalanda.bits-pilani.ac.in/my")
+        soup = BeautifulSoup(result.text, "html.parser")
 
-            result = session.get("http://nalanda.bits-pilani.ac.in/my")
-            soup = BeautifulSoup(result.text, "html.parser")
+        for x in soup.find_all("div", "column c1"):
+            name_url_pair[x.contents[0].get("href")] = ((x.contents[0].contents[1]).split("/")[0]).split("\\")[0]
+        json.dumps(name_url_pair, sub_file)
 
-            sub_url, sub_name = [], []
-
-            for x in soup.find_all("div", "column c1"):
-                sub_url.append(x.contents[0].get("href"))
-                sub_name.append(((x.contents[0].contents[1]).split("/")[0]).split("\\")[0])
-
-            url_file.write("\n".join(sub_url))
-            name_file.write("\n".join(sub_name))
 
 except KeyboardInterrupt:
     quit("Installation cancelled by user. Please retry.")
