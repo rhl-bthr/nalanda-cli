@@ -100,7 +100,7 @@ def download(session, res_urls):
     sub_updates = [[] for x in SUB_NAMES]
     for x in range(len(SUB_NAMES)):
         done_slides_file = open(join(
-            INSTALL_PATH, "Lectures", SUB_NAMES[x]), "a+")
+            INSTALL_PATH, SUB_NAMES[x] + "-lec"), "a+")
         done_slides = done_slides_file.seek(0).read().split("\n")
         new_slides = res_urls[x] - done_slides
         for y in new_slides:
