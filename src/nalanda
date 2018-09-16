@@ -9,9 +9,9 @@ join = os.path.join
 
 INSTALL_PATH = join(os.path.expanduser("~"), ".nalanda-cli")
 SLIDES_PATH = join(os.path.expanduser("~"), "BITS")
-subs = json.load(open(join(INSTALL_PATH, "subjects.json"), "w"))
-SUB_NAMES = subs.keys()
-SUB_URLS = subs.values()
+subs = json.load(open(join(INSTALL_PATH, "subjects.json")))
+SUB_NAMES = list(subs.values())
+SUB_URLS = list(subs.keys())
 
 ZIP_FILE_LINK = "http://nalanda.bits-pilani.ac.in/mod/folder/download_folder.php"
 NALANDA_LOGIN = "http://nalanda.bits-pilani.ac.in/login/index.php"
@@ -61,29 +61,31 @@ def find_new(session, urls_title, news_urls):
     new_urls_title = [[]for x in range(len(SUB_NAMES))]
     for x in range(len(SUB_NAMES)):
         subject_file = open(os.path.join(INSTALL_PATH, SUB_NAMES[x]), "a+")
-        subject_read = (subject_file.seek(0).read()).split("\n")
+        subject_file.seek(0)
+        subject_read = subject_file.read().split("\n")
         for y in (urls_title[x] + news_urls[x]):
-            if y[1] not in subject_read:
+            if y[0] not in subject_read:
                 new_urls_title[x].append(y)
-                subject_file.write("\n" + y[1])
+                subject_file.write("\n" + y[0])
     return new_urls_title
 
 
 def term_display(update_news, new_lectures):
     print(bold("News:"))
-    if(num_news == sum([len(x) for x in update_news])):
+    if(sum([len(x) for x in update_news])==0):
         print("\tNo updates")
     else:
         for x in range(len(SUB_NAMES)):
             if update_news[x] != []:
                 print(bold("\n" + SUB_NAMES[x] + "-"))
-            [print("\t" + bold(str(y + 1)) + ". " + update_news[x][y][1] + "\n\t\t" +
-                   update_news[x][y][0]) for y in range(len(update_news[x]))]
+            for y in range(len(update_news[x])):
+                print("\t" + bold(str(y + 1)) + ". " + update_news[x][y][1] + "\n\t\t" + \
+                    update_news[x][y][0])
 
     print ("-" * 60 + "\n")
 
     print(bold("Lectures:"))
-    if(num_notices == sum([len(x) for x in new_lectures])):
+    if(sum([len(x) for x in new_lectures])==0):
         print("\tNo updates")
     else:
         [print (bold(SUB_NAMES[x]) + " has new updates")
@@ -99,10 +101,10 @@ def download(session, res_urls):
 
     sub_updates = [[] for x in SUB_NAMES]
     for x in range(len(SUB_NAMES)):
-        done_slides_file = open(join(
-            INSTALL_PATH, SUB_NAMES[x] + "-lec"), "a+")
-        done_slides = done_slides_file.seek(0).read().split("\n")
-        new_slides = res_urls[x] - done_slides
+        done_slides_file = open(join(INSTALL_PATH, SUB_NAMES[x] + ".lec"), "a+")
+        done_slides_file.seek(0)
+        done_slides = done_slides_file.read().split("\n")
+        new_slides = list(set(res_urls[x]) - set(done_slides))
         for y in new_slides:
             if "folder/view" in y:
                 id_param = y.split("php")[1]
@@ -122,7 +124,7 @@ if __name__ == "__main__":
     try:
         print ("\t\t" + bold("**nalanda-cli**"))
         session = requests.session()
-        session.post(NALANDA_LOGIN, data=json.loads(open(join(INSTALL_PATH, "config.json"))))
+        session.post(NALANDA_LOGIN, data=json.load(open(join(INSTALL_PATH, "config.json"))))
         notice_urls, news_urls, res_urls = sorting_links()
         subject_news_url = get_news(session, news_urls)
         unread_news = find_new(session, notice_urls, subject_news_url)

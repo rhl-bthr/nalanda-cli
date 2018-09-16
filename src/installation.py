@@ -21,8 +21,8 @@ try:
     name_url_pair = {}
 
     while True:
-        config["username"] = input("\nEnter BITS ID [Eg: f2016015]\n") +
-                          "@pilani.bits-pilani.ac.in"
+        config["username"] = input("\nEnter BITS ID [Eg: f2016015]\n")
+        config["username"] += "@pilani.bits-pilani.ac.in"
 
         config["password"] = getpass(prompt = "Enter nalanda password:")
 
@@ -32,9 +32,8 @@ try:
         if not result.find_all("a", {"id": "loginerrormessage"}):
             break
         print("Username or Password Incorrect. Please retry")
-
     with open(CONFIG_FILE, "w") as f:
-        json.dumps(config, f)
+        json.dump(config, f)
 
     with open(SUBJECTS_FILE, "w") as sub_file:
         result = session.get(HOMEPAGE_LINK)
@@ -42,7 +41,7 @@ try:
 
         for x in soup.find_all("div", "column c1"):
             name_url_pair[x.contents[0].get("href")] = ((x.contents[0].contents[1]).split("/")[0]).split("\\")[0]
-        json.dumps(name_url_pair, sub_file)
+        json.dump(name_url_pair, sub_file)
 
 
 except KeyboardInterrupt:
