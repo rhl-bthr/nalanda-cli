@@ -70,7 +70,7 @@ def find_new(session, urls_title, news_urls):
     return new_urls_title
 
 
-def term_display(update_news, new_lectures):
+def display(update_news, new_lectures):
     print(bold("News:"))
     if(sum([len(x) for x in update_news])==0):
         print("\tNo updates")
@@ -129,7 +129,7 @@ if __name__ == "__main__":
         subject_news_url = get_news(session, news_urls)
         unread_news = find_new(session, notice_urls, subject_news_url)
         new_lectures = download(session, res_urls)
-        term_display(unread_news, new_lectures)
+        display(unread_news, new_lectures)
 
     except requests.exceptions.ConnectionError:
         quit("No Internet Connection. Please retry")
