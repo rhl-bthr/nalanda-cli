@@ -10,15 +10,16 @@ except ImportError:
 
 CONFIG_FILE = os.path.join(os.path.expanduser("~"), ".nalanda-cli","config.json")
 SUBJECTS_FILE = os.path.join(os.path.expanduser("~"), ".nalanda-cli","subjects.json")
+DATA_FILE = os.path.join(os.path.expanduser("~"), ".nalanda-cli","data.json")
 LOGIN_LINK = "http://nalanda.bits-pilani.ac.in/login/index.php"
 HOMEPAGE_LINK = "http://nalanda.bits-pilani.ac.in/my"
 
 session = requests.session()
 
-
 try:
     config = {}
-    name_url_pair = {}
+    sub_name_url = {}
+    URLS = {}
 
     while True:
         config["username"] = input("\nEnter BITS ID [Eg: f2016015]\n")
@@ -35,13 +36,19 @@ try:
     with open(CONFIG_FILE, "w") as f:
         json.dump(config, f)
 
-    with open(SUBJECTS_FILE, "w") as sub_file:
-        result = session.get(HOMEPAGE_LINK)
-        soup = BeautifulSoup(result.text, "html.parser")
+    result = session.get(HOMEPAGE_LINK)
+    soup = BeautifulSoup(result.text, "html.parser")
 
-        for x in soup.find_all("div", "column c1"):
-            name_url_pair[x.contents[0].get("href")] = ((x.contents[0].contents[1]).split("/")[0]).split("\\")[0]
-        json.dump(name_url_pair, sub_file)
+    for x in soup.find_all("div", "column c1"):
+        sub_name_url[x.contents[0].get("href")] = ((x.contents[0].contents[1]).split("/")[0]).split("\\")[0]
+        URLS[x.contents[0].get("href")] = {
+            "resource": [],
+            "notice": [],
+            "news":[]
+        }
+
+    json.dump(URLS, open(DATA_FILE, 'w'))
+    json.dump(sub_name_url, open(SUBJECTS_FILE, "w"))
 
 
 except KeyboardInterrupt:

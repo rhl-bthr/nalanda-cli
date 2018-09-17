@@ -17,91 +17,21 @@ RANGE_SUBS = range(len(SUB_URLS))
 ZIP_FILE_LINK = "http://nalanda.bits-pilani.ac.in/mod/folder/download_folder.php"
 NALANDA_LOGIN = "http://nalanda.bits-pilani.ac.in/login/index.php"
 
+URLS = {}
+for x in RANGE_SUBS:
+    URLS[SUB_URLS[x]] = {
+        "resource": [],
+        "notice": [],
+        "news":[]
+    }
+
+for sub in SUB_NAMES:
+    sub_path = join(SLIDES_PATH, sub)
+    if not os.path.exists(sub_path):
+        os.makedirs(sub_path)
 
 def bold(text):
     return "\033[1m" + text + "\033[0m"
-
-
-def get_news(session, news_urls):
-    subject_news_url = [[] for x in RANGE_SUBS]
-    for x in RANGE_SUBS:
-        for y in range(len(news_urls[x])):
-            result = session.get(news_urls[x][y])
-            soup = BeautifulSoup(result.text, "html.parser")
-            discussion_list = soup.find_all("tr", "discussion")
-            for url in discussion_list:
-                if url.find("td", "topic starter pinned"):
-                    subject_news_url[x].append([url.contents[0].contents[1].get(
-                        "href"), url.contents[0].contents[1].contents[0]])
-                else:
-                    subject_news_url[x].append([url.contents[0].contents[0].get(
-                        "href"), url.contents[0].contents[0].contents[0]])
-    return subject_news_url
-
-
-def find_new(session, urls_title, news_urls):
-    new_urls_title = [[]for x in RANGE_SUBS]
-    for x in RANGE_SUBS:
-        subject_file = open(os.path.join(INSTALL_PATH, SUB_NAMES[x]), "a+")
-        subject_file.seek(0)
-        subject_read = subject_file.read().split("\n")
-        for y in (urls_title[x] + news_urls[x]):
-            if y[0] not in subject_read:
-                new_urls_title[x].append(y)
-                subject_file.write("\n" + y[0])
-    return new_urls_title
-
-
-def display(update_news, new_lectures):
-    print(bold("News:"))
-    if(sum([len(x) for x in update_news])==0):
-        print("\tNo updates")
-    else:
-        for x in RANGE_SUBS:
-            if update_news[x] != []:
-                print(bold("\n" + SUB_NAMES[x] + "-"))
-            for y in range(len(update_news[x])):
-                print("\t" + bold(str(y + 1)) + ". " + update_news[x][y][1] + "\n\t\t" + \
-                    update_news[x][y][0])
-
-    print ("-" * 60 + "\n")
-
-    print(bold("Lectures:"))
-    if not new_lectures:
-        print("\tNo updates")
-    else:
-        for x in new_lectures:
-            print ("\t" + bold(SUB_NAMES[x]) + " has new updates")
-        print ("\tfile://" + SLIDES_PATH)
-
-
-def download(session, res_urls):
-    for sub in SUB_NAMES:
-        sub_path = join(SLIDES_PATH, sub)
-        if not os.path.exists(sub_path):
-            os.makedirs(sub_path)
-
-    updates_sub_index = []
-    for x in RANGE_SUBS:
-        done_slides_file = open(join(INSTALL_PATH, SUB_NAMES[x] + ".lec"), "a+")
-        done_slides_file.seek(0)
-        done_slides = done_slides_file.read().split("\n")
-        new_slides = list(set(res_urls[x]) - set(done_slides))
-        if new_slides:
-            updates_sub_index.append(x)
-        for y in new_slides:
-            if "folder/view" in y:
-                id_param = y.split("php")[1]
-                result = session.get(ZIP_FILE_LINK + id_param)
-            else:
-                result = session.get(y)
-
-            file_name = result.headers["content-disposition"].split('e="')[1].split('"')[0]
-            with open(join(SLIDES_PATH, SUB_NAMES[x], file_name), "wb") as f:
-                f.write(result.content)
-            done_slides_file.write(y + "\n")
-    
-    return updates_sub_index
 
 
 if __name__ == "__main__":
@@ -109,29 +39,77 @@ if __name__ == "__main__":
         print ("\t\t" + bold("**nalanda-cli**"))
         session = requests.session()
         session.post(NALANDA_LOGIN, data=json.load(open(join(INSTALL_PATH, "config.json"))))
+        DONE_URLS = json.load(open(join(INSTALL_PATH, 'data.json')))
 
         links = [BeautifulSoup(session.get(sub).text, "html.parser").find_all("a", {"onclick": ""}) for sub in SUB_URLS]
-        res_urls, news_urls, notice_urls = ([[] for x in RANGE_SUBS] for y in range(3))
-
-        for x in range(len(links)):
-            for y in range(len(links[x])):
-                url = (links[x][y]).get("href")
+        for sub in RANGE_SUBS:
+            for y in links[sub]:
+                url = y.get("href")
                 if("resource/view.php?id" in url or "folder/view.php?id=" in url):
-                    res_urls[x].append(url)
+                    URLS[SUB_URLS[sub]]["resource"].append(url)
                 elif("page/view.php?id" in url):
-                    notice_urls[x].append(
-                        [url, links[x][y].contents[1].contents[0]])
+                    URLS[SUB_URLS[sub]]["notice"].append(url + "$%^" + y.contents[1].contents[0])
                 elif("forum/view.php?id" in url):
-                    news_urls[x].append(url)
+                    URLS[SUB_URLS[sub]]["news"].append(url)
 
-        subject_news_url = get_news(session, news_urls)
-        new_news = find_new(session, notice_urls, subject_news_url)
-        new_lectures = download(session, res_urls)
-        display(new_news, new_lectures)
+        for x in SUB_URLS:
+            for y in URLS[x]["news"]:
+                result = session.get(y)
+                soup = BeautifulSoup(result.text, "html.parser")
+                discussion_list = soup.find_all("tr", "discussion")
+                for url in discussion_list:
+                    if url.find("td", "topic starter pinned"):
+                        URLS[x]["notice"].append(url.contents[0].contents[1].get(
+                            "href") + "$%^" + url.contents[0].contents[1].contents[0])
+                    else:
+                        URLS[x]["notice"].append(url.contents[0].contents[0].get(
+                            "href") + "$%^" + url.contents[0].contents[0].contents[0])
+            URLS[x].pop("news", None)
+
+        new_news = [list(set(URLS[x]["notice"]) - set(DONE_URLS[x]["notice"])) for x in SUB_URLS]
+        new_news = [[x.split("$%^") for x in new_news[sub]]for sub in RANGE_SUBS]
+
+        new_slides = [list(set(URLS[x]["resource"]) - set(DONE_URLS[x]["resource"])) for x in SUB_URLS]
+
+        new_sub_index = []
+        for x in RANGE_SUBS:
+            if new_slides[x]:
+                new_sub_index.append(x)
+            for y in new_slides[x]:
+                if "folder/view" in y:
+                    id_param = y.split("php")[1]
+                    result = session.get(ZIP_FILE_LINK + id_param)
+                else:
+                    result = session.get(y)
+
+                file_name = result.headers["content-disposition"].split('e="')[1].split('"')[0]
+                with open(join(SLIDES_PATH, SUB_NAMES[x], file_name), "wb") as f:
+                    f.write(result.content)
+
+        print(bold("News:"))
+        if(sum([len(x) for x in new_news])==0):
+            print("\tNo updates")
+        else:
+            for x in RANGE_SUBS:
+                if new_news[x]:
+                    print(bold("\n" + SUB_NAMES[x] + "-"))
+                for y in range(len(new_news[x])):
+                    print("\t" + bold(str(y + 1)) + ". " + new_news[x][y][1] + "\n\t\t" + \
+                        new_news[x][y][0])
+
+        print ("\n" + "-" * 60 + "\n")
+
+        print(bold("Lectures:"))
+        if not new_sub_index:
+            print("\tNo updates")
+        else:
+            for x in new_sub_index:
+                print ("\t" + bold(SUB_NAMES[x]) + " has new updates")
+            print ("\tfile://" + SLIDES_PATH)
+
+        json.dump(URLS ,open(join(INSTALL_PATH, 'data.json'), 'w'))
 
     except requests.exceptions.ConnectionError:
         quit("No Internet Connection. Please retry")
-    except IOError:
-        quit("Unable to read from file. Please reinstall nalanda-cli")
     except KeyboardInterrupt:
         print("Stopped by user.")
