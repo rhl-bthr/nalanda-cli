@@ -67,12 +67,12 @@ def display(update_news, new_lectures):
     print ("-" * 60 + "\n")
 
     print(bold("Lectures:"))
-    if(sum([len(x) for x in new_lectures])==0):
+    if not new_lectures:
         print("\tNo updates")
     else:
-        [print (bold(SUB_NAMES[x]) + " has new updates")
-        for x in range(len(SUB_NAMES)) if len(update_list[x]) != 0]
-        print ("file://" + SLIDES_PATH)
+        for x in new_lectures:
+            print ("\t" + bold(SUB_NAMES[x]) + " has new updates")
+        print ("\tfile://" + SLIDES_PATH)
 
 
 def download(session, res_urls):
@@ -87,6 +87,8 @@ def download(session, res_urls):
         done_slides_file.seek(0)
         done_slides = done_slides_file.read().split("\n")
         new_slides = list(set(res_urls[x]) - set(done_slides))
+        if new_slides:
+            updates_sub_index.append(x)
         for y in new_slides:
             if "folder/view" in y:
                 id_param = y.split("php")[1]
@@ -99,7 +101,7 @@ def download(session, res_urls):
                 f.write(result.content)
             done_slides_file.write(y + "\n")
     
-    return sub_updates
+    return updates_sub_index
 
 
 if __name__ == "__main__":
