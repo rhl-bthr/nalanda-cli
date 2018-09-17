@@ -1,5 +1,4 @@
 #! /bin/bash
 sudo pip3 install -r requirements.txt > /dev/null
-cp -rfT "${0%/*}/src" ~/.nalanda-cli
-python3 ~/.nalanda-cli/installation.py
-sudo cp -f ~/.nalanda-cli/nalanda /usr/bin/
+python3 "${0%/*}/src/installation.py"
+sudo cp -f "${0%/*}/src/nalanda" /usr/bin/

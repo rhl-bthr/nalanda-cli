@@ -8,9 +8,12 @@ try:
 except ImportError:
     quit("Required Libraries aren't installed. Please restart installation.")
 
-CONFIG_FILE = os.path.join(os.path.expanduser("~"), ".nalanda-cli","config.json")
-SUBJECTS_FILE = os.path.join(os.path.expanduser("~"), ".nalanda-cli","subjects.json")
-DATA_FILE = os.path.join(os.path.expanduser("~"), ".nalanda-cli","data.json")
+join = os.path.join
+
+INSTALL_PATH = join(os.path.expanduser("~"), ".nalanda-cli")
+SUBJECTS_FILE = join(INSTALL_PATH,"subjects.json")
+DATA_FILE = join(INSTALL_PATH,"data.json")
+CONFIG_FILE = join(INSTALL_PATH,"config.json")
 LOGIN_LINK = "http://nalanda.bits-pilani.ac.in/login/index.php"
 HOMEPAGE_LINK = "http://nalanda.bits-pilani.ac.in/my"
 
@@ -33,6 +36,7 @@ try:
         if not result.find_all("a", {"id": "loginerrormessage"}):
             break
         print("Username or Password Incorrect. Please retry")
+    os.makedirs(INSTALL_PATH)
     with open(CONFIG_FILE, "w") as f:
         json.dump(config, f)
 

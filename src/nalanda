@@ -9,13 +9,16 @@ join = os.path.join
 
 INSTALL_PATH = join(os.path.expanduser("~"), ".nalanda-cli")
 SLIDES_PATH = join(os.path.expanduser("~"), "BITS")
+DATA_FILE = join(INSTALL_PATH,"data.json")
+CONFIG_FILE = join(INSTALL_PATH,"config.json")
+
 subs = json.load(open(join(INSTALL_PATH, "subjects.json")))
 SUB_NAMES = list(subs.values())
 SUB_URLS = list(subs.keys())
 RANGE_SUBS = range(len(SUB_URLS))
 
 ZIP_FILE_LINK = "http://nalanda.bits-pilani.ac.in/mod/folder/download_folder.php"
-NALANDA_LOGIN = "http://nalanda.bits-pilani.ac.in/login/index.php"
+LOGIN_LINK = "http://nalanda.bits-pilani.ac.in/login/index.php"
 
 URLS = {}
 for x in RANGE_SUBS:
@@ -38,8 +41,7 @@ if __name__ == "__main__":
     try:
         print ("\t\t" + bold("**nalanda-cli**"))
         session = requests.session()
-        session.post(NALANDA_LOGIN, data=json.load(open(join(INSTALL_PATH, "config.json"))))
-        DONE_URLS = json.load(open(join(INSTALL_PATH, 'data.json')))
+        session.post(LOGIN_LINK, data=json.load(open(CONFIG_FILE)))
 
         links = [BeautifulSoup(session.get(sub).text, "html.parser").find_all("a", {"onclick": ""}) for sub in SUB_URLS]
         for sub in RANGE_SUBS:
@@ -66,6 +68,7 @@ if __name__ == "__main__":
                             "href") + "$%^" + url.contents[0].contents[0].contents[0])
             URLS[x].pop("news", None)
 
+        DONE_URLS = json.load(open(DATA_FILE))
         new_news = [list(set(URLS[x]["notice"]) - set(DONE_URLS[x]["notice"])) for x in SUB_URLS]
         new_news = [[x.split("$%^") for x in new_news[sub]]for sub in RANGE_SUBS]
 
@@ -107,7 +110,7 @@ if __name__ == "__main__":
                 print ("\t" + bold(SUB_NAMES[x]) + " has new updates")
             print ("\tfile://" + SLIDES_PATH)
 
-        json.dump(URLS ,open(join(INSTALL_PATH, 'data.json'), 'w'))
+        json.dump(URLS ,open(DATA_FILE, 'w'))
 
     except requests.exceptions.ConnectionError:
         quit("No Internet Connection. Please retry")
