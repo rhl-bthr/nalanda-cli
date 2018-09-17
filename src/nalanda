@@ -110,7 +110,7 @@ if __name__ == "__main__":
                 print ("\t" + bold(SUB_NAMES[x]) + " has new updates")
             print ("\tfile://" + SLIDES_PATH)
 
-        json.dump(URLS ,open(DATA_FILE, 'w'))
+        json.dump(URLS ,open(DATA_FILE, 'w'), indent=4)
 
     except requests.exceptions.ConnectionError:
         quit("No Internet Connection. Please retry")
