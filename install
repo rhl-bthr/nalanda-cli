@@ -1,4 +1,4 @@
 #! /bin/bash
-sudo pip3 install -r requirements.txt > /dev/null
+sudo -H pip3 install -r requirements.txt > /dev/null
 python3 "${0%/*}/src/installation.py"
 sudo cp -f "${0%/*}/src/nalanda" /usr/bin/
