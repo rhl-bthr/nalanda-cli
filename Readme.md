@@ -20,25 +20,11 @@ Eg: if your ID is 2016A7PS0015P, type in
     f2016015
     ```
     2. Enter your nalanda password.
-    3. Enter the path to store lecture slides -
-    Eg: If you want to store lecture slides at
 
-    ```shell
-    /home/username/Bits/2-1/
-    ```
-    then type,
-    ```shell
-    Bits/2-1
-    ```
 ![Installation](screenshots/install.jpg)<br>
 
 ## Usage:
-Whenever, you want to see the Nalanda Updates or just download the slides, open a terminal and type:
+To see Nalanda updates or download the slides, open a terminal and type:
 ```shell
 nalanda
 ```
-
-## Contributing:
-You can contribute by reporting bugs or solving the existing issues.
- - follow PEP8 standards and flake8
- - make descriptive commit messages for each change
