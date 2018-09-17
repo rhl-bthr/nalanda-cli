@@ -36,7 +36,10 @@ try:
         if not result.find_all("a", {"id": "loginerrormessage"}):
             break
         print("Username or Password Incorrect. Please retry")
-    os.makedirs(INSTALL_PATH)
+
+    if not os.path.exists(INSTALL_PATH):
+        os.makedirs(INSTALL_PATH)
+
     with open(CONFIG_FILE, "w") as f:
         json.dump(config, f)
 
