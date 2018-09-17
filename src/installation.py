@@ -25,10 +25,10 @@ try:
     URLS = {}
 
     while True:
-        config["username"] = input("\nEnter BITS ID [Eg: f2016015]\n")
+        config["username"] = input("Enter BITS ID [Eg: f2016015]\n")
         config["username"] += "@pilani.bits-pilani.ac.in"
 
-        config["password"] = getpass(prompt = "Enter nalanda password:")
+        config["password"] = getpass(prompt = "Enter nalanda password:\n",)
 
         result = session.post(LOGIN_LINK, data = config)
         result = BeautifulSoup(result.text, "html.parser")
@@ -55,7 +55,7 @@ try:
 
     json.dump(URLS, open(DATA_FILE, 'w'), indent=4)
     json.dump(sub_name_url, open(SUBJECTS_FILE, "w"), indent=4)
-    print("\nInstallation Successful ✔")
+    print("Installation Successful ✔")
 
 except KeyboardInterrupt:
     quit("Installation cancelled by user. Please retry.")
