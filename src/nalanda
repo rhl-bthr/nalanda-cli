@@ -7,7 +7,7 @@ import json
 
 join = os.path.join
 
-INSTALL_PATH = join(os.path.expanduser("~"), ".nalanda-cli")
+INSTALL_PATH = join(os.path.expanduser("~"), ".config/nalanda-cli")
 SLIDES_PATH = join(os.path.expanduser("~"), "BITS")
 DATA_FILE = join(INSTALL_PATH,"data.json")
 CONFIG_FILE = join(INSTALL_PATH,"config.json")
@@ -39,7 +39,6 @@ def bold(text):
 
 if __name__ == "__main__":
     try:
-        print ("\t\t" + bold("**nalanda-cli**"))
         session = requests.session()
         session.post(LOGIN_LINK, data=json.load(open(CONFIG_FILE)))
 

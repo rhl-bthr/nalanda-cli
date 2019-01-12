@@ -10,7 +10,7 @@ except ImportError:
 
 join = os.path.join
 
-INSTALL_PATH = join(os.path.expanduser("~"), ".nalanda-cli")
+INSTALL_PATH = join(os.path.expanduser("~"), ".config/nalanda-cli")
 SUBJECTS_FILE = join(INSTALL_PATH,"subjects.json")
 DATA_FILE = join(INSTALL_PATH,"data.json")
 CONFIG_FILE = join(INSTALL_PATH,"config.json")
