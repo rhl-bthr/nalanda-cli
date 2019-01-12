@@ -36,82 +36,80 @@ for sub in SUB_NAMES:
 def bold(text):
     return "\033[1m" + text + "\033[0m"
 
+try:
+    session = requests.session()
+    session.post(LOGIN_LINK, data=json.load(open(CONFIG_FILE)))
 
-if __name__ == "__main__":
-    try:
-        session = requests.session()
-        session.post(LOGIN_LINK, data=json.load(open(CONFIG_FILE)))
+    links = [BeautifulSoup(session.get(sub).text, "html.parser").find_all("a", {"onclick": ""}) for sub in SUB_URLS]
+    for sub in RANGE_SUBS:
+        for y in links[sub]:
+            url = y.get("href")
+            if("resource/view.php?id" in url or "folder/view.php?id=" in url):
+                URLS[SUB_URLS[sub]]["resource"].append(url)
+            elif("page/view.php?id" in url):
+                URLS[SUB_URLS[sub]]["notice"].append(url + "$%^" + y.contents[1].contents[0])
+            elif("forum/view.php?id" in url):
+                URLS[SUB_URLS[sub]]["news"].append(url)
 
-        links = [BeautifulSoup(session.get(sub).text, "html.parser").find_all("a", {"onclick": ""}) for sub in SUB_URLS]
-        for sub in RANGE_SUBS:
-            for y in links[sub]:
-                url = y.get("href")
-                if("resource/view.php?id" in url or "folder/view.php?id=" in url):
-                    URLS[SUB_URLS[sub]]["resource"].append(url)
-                elif("page/view.php?id" in url):
-                    URLS[SUB_URLS[sub]]["notice"].append(url + "$%^" + y.contents[1].contents[0])
-                elif("forum/view.php?id" in url):
-                    URLS[SUB_URLS[sub]]["news"].append(url)
-
-        for x in SUB_URLS:
-            for y in URLS[x]["news"]:
-                result = session.get(y)
-                soup = BeautifulSoup(result.text, "html.parser")
-                discussion_list = soup.find_all("tr", "discussion")
-                for url in discussion_list:
-                    if url.find("td", "topic starter pinned"):
-                        URLS[x]["notice"].append(url.contents[0].contents[1].get(
-                            "href") + "$%^" + url.contents[0].contents[1].contents[0])
-                    else:
-                        URLS[x]["notice"].append(url.contents[0].contents[0].get(
-                            "href") + "$%^" + url.contents[0].contents[0].contents[0])
-            URLS[x].pop("news", None)
-
-        DONE_URLS = json.load(open(DATA_FILE))
-        new_news = [list(set(URLS[x]["notice"]) - set(DONE_URLS[x]["notice"])) for x in SUB_URLS]
-        new_news = [[x.split("$%^") for x in new_news[sub]]for sub in RANGE_SUBS]
-
-        new_slides = [list(set(URLS[x]["resource"]) - set(DONE_URLS[x]["resource"])) for x in SUB_URLS]
-
-        new_sub_index = []
-        for x in RANGE_SUBS:
-            if new_slides[x]:
-                new_sub_index.append(x)
-            for y in new_slides[x]:
-                if "folder/view" in y:
-                    id_param = y.split("php")[1]
-                    result = session.get(ZIP_FILE_LINK + id_param)
+    for x in SUB_URLS:
+        for y in URLS[x]["news"]:
+            result = session.get(y)
+            soup = BeautifulSoup(result.text, "html.parser")
+            discussion_list = soup.find_all("tr", "discussion")
+            for url in discussion_list:
+                if url.find("td", "topic starter pinned"):
+                    URLS[x]["notice"].append(url.contents[0].contents[1].get(
+                        "href") + "$%^" + url.contents[0].contents[1].contents[0])
                 else:
-                    result = session.get(y)
+                    URLS[x]["notice"].append(url.contents[0].contents[0].get(
+                        "href") + "$%^" + url.contents[0].contents[0].contents[0])
+        URLS[x].pop("news", None)
 
-                file_name = result.headers["content-disposition"].split('e="')[1].split('"')[0]
-                with open(join(SLIDES_PATH, SUB_NAMES[x], file_name), "wb") as f:
-                    f.write(result.content)
+    DONE_URLS = json.load(open(DATA_FILE))
+    new_news = [list(set(URLS[x]["notice"]) - set(DONE_URLS[x]["notice"])) for x in SUB_URLS]
+    new_news = [[x.split("$%^") for x in new_news[sub]]for sub in RANGE_SUBS]
 
-        print(bold("News:"))
-        if(sum([len(x) for x in new_news])==0):
-            print("\tNo updates")
-        else:
-            for x in RANGE_SUBS:
-                if new_news[x]:
-                    print(bold("\n" + SUB_NAMES[x] + "-"))
-                for y in range(len(new_news[x])):
-                    print("\t" + bold(str(y + 1)) + ". " + new_news[x][y][1] + "\n\t\t" + \
-                        new_news[x][y][0])
+    new_slides = [list(set(URLS[x]["resource"]) - set(DONE_URLS[x]["resource"])) for x in SUB_URLS]
 
-        print ("\n" + "-" * 60 + "\n")
+    new_sub_index = []
+    for x in RANGE_SUBS:
+        if new_slides[x]:
+            new_sub_index.append(x)
+        for y in new_slides[x]:
+            if "folder/view" in y:
+                id_param = y.split("php")[1]
+                result = session.get(ZIP_FILE_LINK + id_param)
+            else:
+                result = session.get(y)
 
-        print(bold("Lectures:"))
-        if not new_sub_index:
-            print("\tNo updates")
-        else:
-            for x in new_sub_index:
-                print ("\t" + bold(SUB_NAMES[x]) + " has new updates")
-            print ("\tfile://" + SLIDES_PATH)
+            file_name = result.headers["content-disposition"].split('e="')[1].split('"')[0]
+            with open(join(SLIDES_PATH, SUB_NAMES[x], file_name), "wb") as f:
+                f.write(result.content)
 
-        json.dump(URLS ,open(DATA_FILE, 'w'), indent=4)
+    print(bold("News:"))
+    if(sum([len(x) for x in new_news])==0):
+        print("\tNo updates")
+    else:
+        for x in RANGE_SUBS:
+            if new_news[x]:
+                print(bold("\n" + SUB_NAMES[x] + "-"))
+            for y in range(len(new_news[x])):
+                print("\t" + bold(str(y + 1)) + ". " + new_news[x][y][1] + "\n\t\t" + \
+                    new_news[x][y][0])
 
-    except requests.exceptions.ConnectionError:
-        quit("No Internet Connection. Please retry")
-    except KeyboardInterrupt:
-        print("Stopped by user.")
+    print ("\n" + "-" * 60 + "\n")
+
+    print(bold("Lectures:"))
+    if not new_sub_index:
+        print("\tNo updates")
+    else:
+        for x in new_sub_index:
+            print ("\t" + bold(SUB_NAMES[x]) + " has new updates")
+        print ("\tfile://" + SLIDES_PATH)
+
+    json.dump(URLS ,open(DATA_FILE, 'w'), indent=4)
+
+except requests.exceptions.ConnectionError:
+    quit("No Internet Connection. Please retry")
+except KeyboardInterrupt:
+    print("Stopped by user.")
