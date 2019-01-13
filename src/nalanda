@@ -17,8 +17,8 @@ SUB_NAMES = list(subs.values())
 SUB_URLS = list(subs.keys())
 RANGE_SUBS = range(len(SUB_URLS))
 
-ZIP_FILE_LINK = "http://nalanda.bits-pilani.ac.in/mod/folder/download_folder.php"
-LOGIN_LINK = "http://nalanda.bits-pilani.ac.in/login/index.php"
+ZIP_FILE_LINK = "https://nalanda.bits-pilani.ac.in/mod/folder/download_folder.php"
+LOGIN_LINK = "https://nalanda.bits-pilani.ac.in/login/index.php"
 
 URLS = {}
 for x in RANGE_SUBS:
